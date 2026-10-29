@@ -11,8 +11,15 @@ import {
   escapeHtml,
   loadState,
   saveState,
+  readBrowseParams,
+  writeBrowseParams,
 } from "../dist/core.js";
-for (const file of ["dist/app.js", "dist/core.js", "scripts/serve.mjs"]) {
+for (const file of [
+  "dist/app.js",
+  "dist/core.js",
+  "dist/theme.js",
+  "scripts/serve.mjs",
+]) {
   const result = spawnSync(process.execPath, ["--check", file], {
     encoding: "utf8",
   });
@@ -110,7 +117,9 @@ assert.equal(
   false,
 );
 const html = fs.readFileSync("dist/index.html", "utf8");
-const css = fs.readFileSync("dist/styles.css", "utf8");
+const css =
+  fs.readFileSync("dist/styles.css", "utf8") +
+  fs.readFileSync("dist/experience.css", "utf8");
 for (const x of seed) {
   assert.ok(fs.existsSync(path.join("dist", x.image)), x.image);
   assert.equal(x.demo, true);
@@ -129,7 +138,61 @@ assert.ok(html.includes('aria-live="polite"'));
 const icons = fs.readFileSync("dist/assets/icons/style.css", "utf8");
 for (const i of [...html.matchAll(/ph ph-([a-z-]+)/g)].map((x) => x[1]))
   assert.ok(icons.includes(".ph-" + i + ":"), i);
-assert.ok(html.includes("maqueta funcional"));
+const exploreHtml = fs.readFileSync("dist/explorar.html", "utf8");
+const guideHtml = fs.readFileSync("dist/guia.html", "utf8");
+assert.ok(exploreHtml.includes("maqueta funcional"));
+assert.ok(!html.includes('id="listings"'));
+assert.ok(!html.includes('id="search-form"'));
+assert.ok(exploreHtml.includes('id="listings"'));
+assert.ok(!exploreHtml.includes('class="hero shell"'));
+for (const [name, source] of [
+  ["index.html", html],
+  ["explorar.html", exploreHtml],
+  ["guia.html", guideHtml],
+]) {
+  assert.equal(
+    [...source.matchAll(/<h1[ >]/g)].length,
+    1,
+    name + " must have one primary heading",
+  );
+  assert.ok(source.includes("theme.js"), name);
+  assert.ok(source.includes('id="theme-preference"'), name);
+  assert.ok(source.includes('href="explorar.html"'), name);
+  for (const match of source.matchAll(
+    /(?:src|href)="([^"#?]+)(?:[?#][^"]*)?"/g,
+  )) {
+    const file = match[1];
+    if (/^(?:https?:|data:)/.test(file)) continue;
+    assert.ok(
+      !file.startsWith("/"),
+      "Absolute path would break GitHub Pages: " + file,
+    );
+    assert.ok(fs.existsSync(path.join("dist", file)), name + ": " + file);
+  }
+}
+const wanted = {
+  type: "service",
+  city: "Cuenca",
+  query: "matemáticas & física",
+  category: "Educación",
+  mode: "En línea",
+  sort: "title",
+  savedOnly: true,
+};
+assert.deepEqual(readBrowseParams("?" + writeBrowseParams(wanted)), wanted);
+const parsed = readBrowseParams(
+  "?tipo=__proto__&ciudad=Inexistente&modalidad=video&orden=script",
+);
+assert.equal(parsed.type, "all");
+assert.equal(parsed.city, "all");
+assert.equal(parsed.mode, "all");
+assert.equal(parsed.sort, "recent");
+assert.equal(
+  readBrowseParams("?q=" + encodeURIComponent("x".repeat(200))).query.length,
+  120,
+);
+assert.ok(fs.existsSync("dist/.nojekyll"));
+assert.ok(guideHtml.includes("<details>"));
 const imageBytes = fs.statSync("dist/assets/community.webp").size;
 assert.ok(imageBytes < 500000, "Hero image exceeds 500 KB");
 console.log(

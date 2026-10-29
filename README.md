@@ -1,49 +1,69 @@
 # dóname
 
-MVP de una plataforma comunitaria de Ecuador para donar objetos, compartir servicios y conocimientos, pedir ayuda y conectar voluntariados. Maqueta funcional sin registro, login ni cuentas.
+**Lo que das, nos une.** MVP de una comunidad en Ecuador para donar objetos, compartir conocimientos, pedir ayuda y encontrar voluntariados.
 
-## Ejecutar
+- **Sitio público:** https://aurelioochoa.github.io/doname/
+- **Explorar:** https://aurelioochoa.github.io/doname/explorar.html
+- **Guía:** https://aurelioochoa.github.io/doname/guia.html
 
-Requiere Node.js 22 o superior.
+![dóname en modo oscuro](design/v2-landing-dark.jpg)
+
+## Ejecutar en local
+
+Requiere Node.js 22 o superior. No necesita instalación ni compilación: los recursos están incluidos en `dist/`.
 
 ```bash
 npm run dev
 ```
 
-Abrir http://localhost:4173. El servidor sirve los archivos de `dist/` sin compilación. Los assets, fuentes e iconos ya están incluidos; no necesita instalar dependencias para ejecutar. `npm install` permite recuperar los paquetes originales de fuentes e iconos.
+Abrir http://localhost:4173. Para verificar los módulos, filtros, validaciones y enlaces estáticos:
 
 ```bash
 npm test
 ```
 
-## Funcionalidades
+## Qué puedes probar
 
-- Explorar anuncios de objetos, servicios, necesidades y voluntariados.
-- Búsqueda sin distinción de mayúsculas ni tildes, filtros por ciudad, categoría y modalidad, orden y carga de más resultados.
-- Detalle de cada anuncio, favoritos e intereses de demostración.
-- Publicación con foto, validación, edición, estado completado, archivo y restauración.
-- Contacto por WhatsApp exclusivamente cuando quien publica lo autoriza. Sin permiso, el teléfono no se conserva. No se envían mensajes automáticamente.
-- Actividad local persistente entre recargas.
-- Registro de horas de servicio y constancia de ejemplo imprimible o guardable como PDF desde el navegador.
-- Diseño adaptable a móvil, navegación por teclado, diálogos nativos, avisos accesibles y respeto por movimiento reducido.
+- Landing, catálogo y guía en páginas independientes.
+- Modo **claro, oscuro o del sistema**, persistente entre páginas y recargas.
+- Animaciones de entrada y al desplazarse; respuesta al guardar, menús y botones. Se respeta la preferencia de movimiento reducido.
+- Catálogo de objetos, servicios, necesidades y voluntariados.
+- Búsqueda sin distinguir tildes o mayúsculas; ciudad, categoría, modalidad y orden.
+- Filtros en URL, chips para retirarlos y búsquedas compartibles.
+- Vista de tarjetas o lista y filtro de favoritos.
+- Enlaces directos a los detalles de anuncios de ejemplo.
+- Publicación con foto, validación, edición, archivo, restauración y estado completado.
+- Borrador de texto recuperable del formulario. No guarda el teléfono ni la foto.
+- WhatsApp solo con autorización de quien publica; sin autorización el número no se guarda.
+- Resumen de actividad local, registro de horas y constancia de ejemplo imprimible.
+- Menú móvil, teclado, diálogos nativos y preguntas frecuentes.
 
-## Alcance de esta maqueta
+## Alcance del MVP
 
-Los anuncios iniciales son ejemplos. Los cambios se guardan en `localStorage` en el navegador que los crea; no son visibles desde otro dispositivo, puerto, dominio o navegador. No hay backend, cuentas, chat, moderación ni verificación de personas u organizaciones. Las constancias son ejemplos con horas autodeclaradas.
+**Sin login, sin cuentas y sin backend.** Los anuncios iniciales son ejemplos. Las publicaciones nuevas, favoritos, intereses, borradores y horas se guardan en el almacenamiento local del navegador y no se sincronizan con otras personas o dispositivos. Publicar el sitio en GitHub Pages no convierte estos datos en una base de datos compartida.
+
+Los enlaces de anuncios de ejemplo funcionan en cualquier navegador. Los anuncios que creas localmente no tienen un enlace público compartible. El contacto de WhatsApp solo abre un borrador; nunca envía mensajes automáticamente. Las constancias usan horas autodeclaradas y no tienen acreditación institucional.
+
+## Publicación automática
+
+`.github/workflows/pages.yml` verifica la aplicación en pushes y pull requests. Los pushes a `main` publican `dist/` en GitHub Pages mediante un entorno `github-pages`. Las acciones están fijadas a sus SHA. No se necesitan secretos propios ni pasos de compilación.
 
 ## Estructura
 
-- `dist/index.html`: página y contenido principal.
-- `dist/styles.css`: diseño responsive, animaciones e impresión.
-- `dist/app.js`: interfaz, formularios y recorridos.
-- `dist/core.js`: datos de ejemplo, filtros, validación y persistencia.
-- `dist/assets/`: imágenes WebP, fotografías, fuentes e iconos servidos localmente.
-- `scripts/serve.mjs`: servidor local sin dependencias.
-- `scripts/verify.mjs`: comprobaciones de filtros, publicación, consentimiento, persistencia y assets.
-- `design/ASSETS.md`: prompts exactos y procedencia de recursos.
-- `design/originals/`: imágenes originales generadas con imagegen.
-- `GATES.md`: criterios y evidencia de aceptación.
+| Archivo | Propósito |
+| --- | --- |
+| `dist/index.html` | Landing de presentación |
+| `dist/explorar.html` | Catálogo y búsqueda |
+| `dist/guia.html` | Ayuda y preguntas frecuentes |
+| `dist/app.js` | Interacciones, formularios, rutas y actividad local |
+| `dist/core.js` | Datos de ejemplo, filtros, URL, validación y persistencia |
+| `dist/theme.js` | Tema antes del primer render, sistema y persistencia |
+| `dist/styles.css` | Base visual del MVP |
+| `dist/experience.css` | Páginas, temas, animaciones y mejoras responsive |
+| `scripts/serve.mjs` | Servidor local sin dependencias |
+| `scripts/verify.mjs` | Comprobaciones de regresión y rutas estáticas |
+| `design/ASSETS.md` | Procedencia, prompts y licencias de recursos |
+| `QA.md` | Recorridos verificados |
+| `GATES.md` | Criterios y evidencia de aceptación |
 
-## Dirección visual
-
-Comunidad accesible y cercana: fondo claro, verde profundo, fotografía editorial cálida y tipografías Plus Jakarta Sans y DM Sans. Variación 4/10, movimiento 3/10, densidad 4/10. CSS nativo para esta maqueta estática; Phosphor como familia de iconos. Botones y campos de 8-10 px, tarjetas de 14-20 px y corazones circulares. Animaciones breves para entrada, estado y respuesta a interacción.
+Los originales de las imágenes se conservan en `design/originals/`. Los paquetes Fontsource y Phosphor figuran en `package.json` para poder recuperar las fuentes e iconos; sus versiones servidas ya están en `dist/assets/`.

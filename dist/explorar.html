@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es-EC">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#236248" />
+    <meta
+      name="description"
+      content="Lo que das, nos une. Explora dóname, una comunidad para donar objetos, compartir conocimientos, pedir ayuda y encontrar voluntariados en Ecuador."
+    />
+    <title>Explorar donaciones y servicios · dóname</title>
+    <meta property="og:title" content="dóname · Lo que das, nos une" />
+    <meta
+      property="og:description"
+      content="Objetos, conocimientos y tiempo para una comunidad más cercana en Ecuador."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23236248'/%3E%3Ctext x='16' y='47' fill='white' font-family='Arial' font-weight='bold' font-size='49'%3Ed%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="assets/jakarta-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/icons/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="experience.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body data-page="explore">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="header">
+      <div class="shell nav">
+        <a class="brand" href="index.html" aria-label="dóname, inicio"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <nav id="primary-nav" aria-label="Navegación principal">
+          <a class="nav-link" href="index.html">Inicio</a
+          ><a class="nav-link active" href="explorar.html" aria-current="page"
+            >Explorar</a
+          ><a class="nav-link" href="explorar.html?tipo=volunteer"
+            >Voluntariados</a
+          ><a class="nav-link" href="guia.html">Cómo funciona</a
+          ><button class="nav-link mobile-activity" data-action="activity">
+            Mi actividad
+          </button>
+        </nav>
+        <div class="nav-actions">
+          <label class="theme-control"
+            ><i class="ph ph-circle-half" aria-hidden="true"></i
+            ><span class="sr-only">Apariencia</span
+            ><select id="theme-preference" aria-label="Apariencia">
+              <option value="system">Sistema</option>
+              <option value="light">Claro</option>
+              <option value="dark">Oscuro</option>
+            </select></label
+          ><button
+            class="activity-button"
+            data-action="activity"
+            aria-label="Mi actividad"
+          >
+            <i class="ph ph-heart" aria-hidden="true"></i
+            ><span>Mi actividad</span
+            ><span id="saved-count" class="count" hidden>0</span></button
+          ><button
+            class="button primary publish-nav"
+            data-action="publish"
+            aria-label="Publicar"
+          >
+            <i class="ph ph-plus" aria-hidden="true"></i>Publicar</button
+          ><button
+            class="menu-button"
+            data-action="menu"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="primary-nav"
+          >
+            <i class="ph ph-list" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="contenido">
+      <section
+        class="explore shell explore-page"
+        id="explorar"
+        aria-labelledby="explore-title"
+      >
+        <a class="breadcrumb" href="index.html"
+          ><i class="ph ph-arrow-left" aria-hidden="true"></i>Inicio</a
+        >
+        <div class="section-heading">
+          <div>
+            <h1 id="explore-title">Encuentra lo que nos une.</h1>
+            <p>Encuentra una oportunidad de ayudar, cerquita de ti.</p>
+          </div>
+          <span class="free-note"
+            ><i class="ph ph-sparkle" aria-hidden="true"></i> Aquí, todo se
+            comparte gratis</span
+          >
+        </div>
+        <form id="search-form" class="search-bar" role="search">
+          <div class="search-field">
+            <i class="ph ph-magnifying-glass" aria-hidden="true"></i
+            ><label class="sr-only" for="search"
+              >Buscar objetos, servicios o causas</label
+            ><input
+              id="search"
+              maxlength="120"
+              name="search"
+              type="search"
+              placeholder="¿Qué necesitas o qué te gustaría compartir?"
+              autocomplete="off"
+            />
+          </div>
+          <div class="location-field">
+            <i class="ph ph-map-pin" aria-hidden="true"></i
+            ><label class="sr-only" for="city">Ciudad</label
+            ><select id="city">
+              <option value="all">Todo Ecuador</option></select
+            ><i class="ph ph-caret-down" aria-hidden="true"></i>
+          </div>
+          <button class="button primary search-submit" type="submit">
+            Buscar <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </button>
+        </form>
+        <div class="filter-row">
+          <div class="type-tabs" role="group" aria-label="Tipo de anuncio">
+            <button
+              class="filter-tab selected"
+              data-type="all"
+              aria-pressed="true"
+            >
+              <i class="ph ph-squares-four" aria-hidden="true"></i>Todo</button
+            ><button class="filter-tab" data-type="object" aria-pressed="false">
+              <i class="ph ph-package" aria-hidden="true"></i>Objetos</button
+            ><button
+              class="filter-tab"
+              data-type="service"
+              aria-pressed="false"
+            >
+              <i class="ph ph-chalkboard-teacher" aria-hidden="true"></i
+              >Servicios</button
+            ><button class="filter-tab" data-type="need" aria-pressed="false">
+              <i class="ph ph-hand-heart" aria-hidden="true"></i
+              >Necesidades</button
+            ><button
+              class="filter-tab"
+              data-type="volunteer"
+              aria-pressed="false"
+            >
+              <i class="ph ph-users-three" aria-hidden="true"></i>Voluntariados
+            </button>
+          </div>
+          <button class="button filter-more" data-action="filters">
+            <i class="ph ph-sliders-horizontal" aria-hidden="true"></i> Filtros
+            <span id="filter-count"></span>
+          </button>
+        </div>
+        <div class="browse-tools">
+          <button
+            class="saved-filter"
+            data-action="saved-only"
+            aria-pressed="false"
+          >
+            <i class="ph ph-heart" aria-hidden="true"></i>Mis guardados</button
+          ><button class="search-share" data-action="share-search">
+            <i class="ph ph-link" aria-hidden="true"></i>Compartir búsqueda
+          </button>
+          <div
+            class="view-switch"
+            role="group"
+            aria-label="Vista de resultados"
+          >
+            <button
+              data-view="grid"
+              aria-label="Vista de tarjetas"
+              aria-pressed="true"
+            >
+              <i class="ph ph-squares-four" aria-hidden="true"></i></button
+            ><button
+              data-view="list"
+              aria-label="Vista de lista"
+              aria-pressed="false"
+            >
+              <i class="ph ph-list-bullets" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div
+          id="active-filters"
+          class="active-filters"
+          aria-label="Filtros activos"
+        ></div>
+        <div class="results-line">
+          <p id="results-count" role="status" aria-live="polite"></p>
+          <label class="sort-label" for="sort"
+            >Ordenar:
+            <select id="sort">
+              <option value="recent">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+              <option value="title">Título: A a Z</option>
+            </select></label
+          >
+        </div>
+        <div id="listings" class="listing-grid"></div>
+        <div class="load-more-wrap">
+          <button id="load-more" class="button outline">
+            Ver más oportunidades
+            <i class="ph ph-arrow-down" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="browse-invitation">
+          <i class="ph ph-hand-heart" aria-hidden="true"></i>
+          <div>
+            <h2>¿No encuentras lo que necesitas?</h2>
+            <p>
+              Cuéntale a la comunidad. Pedir ayuda también es un primer paso.
+            </p>
+          </div>
+          <button class="button outline" data-action="publish-need">
+            Publicar una necesidad <i class="ph ph-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="demo-note">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          <p>
+            Estás explorando una maqueta funcional. Los anuncios iniciales son
+            ejemplos. Tus publicaciones y favoritos se guardan en este
+            navegador.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="shell footer-main">
+        <a class="brand" href="index.html"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <p>Lo que das, nos une.</p>
+        <a href="guia.html">Cómo funciona</a
+        ><button data-action="community">Cuidemos la comunidad</button
+        ><button data-action="privacy">Tus datos</button
+        ><span class="footer-country"
+          ><span class="ecuador-flag" aria-hidden="true"></span> Hecho para
+          Ecuador</span
+        >
+      </div>
+      <div class="shell footer-bottom">
+        <span>Un espacio para dar, recibir y conectar.</span
+        ><span>Sin compras. Sin ventas. Con propósito.</span>
+      </div>
+    </footer>
+    <dialog id="modal" class="modal" aria-labelledby="modal-title">
+      <div id="modal-content"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <button
+      class="back-top"
+      data-action="back-top"
+      aria-label="Volver arriba"
+      hidden
+    >
+      <i class="ph ph-arrow-up" aria-hidden="true"></i>
+    </button>
+  </body>
+</html>

@@ -1,17 +1,23 @@
-# Gates: dóname
+# Gates: dóname v2
 
-Scope: Primera versión navegable para donar objetos y servicios, pedir ayuda y explorar voluntariados en Ecuador. Los ejemplos y datos guardados en este navegador se identifican como tales.
+Scope: Ampliar el MVP sin cuentas con landing y exploración separadas, modo claro/oscuro/sistema, animaciones accesibles y funciones de navegación; publicar el código en GitHub público y el sitio en GitHub Pages.
 
-- [x] G1: Los archivos de la aplicación son válidos y los filtros devuelven los anuncios correspondientes
+- [x] G1: La regresión de datos, enlaces entre páginas, filtros y validación pasa las comprobaciones
   CHECK: node scripts/verify.mjs
   EXPECT: DONAME_VERIFIED
   EVIDENCE: exit=0; shell=/bin/sh; cwd=/home/aurelio/Repos/doname; path=0cab3360a3c8/31 entries; EXPECT=matched; output-sha256=f58025641d42b07eb530d87f0c8a52ba64ef7031da6ec919f7ab4b7de38ec6d2; output-bytes=115
 
-- [x] G2: Publicar, guardar favoritos y gestionar solicitudes conserva los datos al recargar
-  EVIDENCE: Brave localhost:4173; publicación de servicio, foto, edición y favoritos persistieron al recargar; consentimiento de WhatsApp otorgado y revocado; completar, archivar y restaurar comprobados. Recorridos documentados en QA.md.
+- [x] G2: Landing y exploración son páginas distintas con filtros restaurables por URL, favoritos y enlaces de detalle
+  EVIDENCE: Brave: landing sin catálogo; navegación a explorar.html y guia.html; Servicios + Cuenca + matematicas conservó una coincidencia y URL al recargar; favoritos, vista de lista y enlaces de detalle verificados. QA.md.
 
-- [x] G3: La interfaz se puede recorrer con teclado y se adapta a móvil y escritorio
-  EVIDENCE: Revisiones visuales de escritorio y teléfono; anchos 320 y 768 sin desbordamiento (scrollWidth igual a clientWidth: 305 y 753 con scrollbar); Tab enfoca opciones del formulario, Escape cierra el diálogo y devuelve el foco a Publicar.
+- [x] G3: El tema claro, oscuro y del sistema funciona en todas las páginas y conserva la elección
+  EVIDENCE: Brave: Oscuro en landing, catálogo y diálogos; Claro en guía; elección persistente al navegar/recargar. Sistema resolvió dark y matchMedia devolvió systemDark=true.
 
-- [x] G4: La versión publicada responde con una URL confirmada por Sites
-  EVIDENCE: Sites confirmó succeeded para appgdep_6ae3af1880e481918c96d979823a6e14; URL https://doname-ecuador.fusilero.chatgpt.site; commit desplegado adcbdfed1395a57cd1859363e8995023e65fffd8. Alojamiento privado de propietario; la aplicación local no incluye autenticación.
+- [x] G4: Animaciones, teclado, menú móvil y nuevos recorridos funcionan sin desbordar la pantalla
+  EVIDENCE: Brave: nueve comprobaciones de ancho en tres páginas a 320/768/1280, todas sin desbordamiento; menú móvil/actividad, FAQ, borrador, publicación desde landing y Escape comprobados. Consola sin errores. Capturas en design/v2-*.jpg.
+
+- [ ] G5: El repositorio público de aurelioochoa contiene el código y el flujo de publicación
+  EVIDENCE: pending
+
+- [ ] G6: GitHub Pages publica la versión final y responde correctamente bajo la ruta del repositorio
+  EVIDENCE: pending

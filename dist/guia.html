@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="es-EC">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#236248" />
+    <meta
+      name="description"
+      content="Lo que das, nos une. Explora dóname, una comunidad para donar objetos, compartir conocimientos, pedir ayuda y encontrar voluntariados en Ecuador."
+    />
+    <title>Cómo funciona · dóname</title>
+    <meta property="og:title" content="dóname · Lo que das, nos une" />
+    <meta
+      property="og:description"
+      content="Objetos, conocimientos y tiempo para una comunidad más cercana en Ecuador."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23236248'/%3E%3Ctext x='16' y='47' fill='white' font-family='Arial' font-weight='bold' font-size='49'%3Ed%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="assets/jakarta-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/icons/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="experience.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body data-page="guide">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="header">
+      <div class="shell nav">
+        <a class="brand" href="index.html" aria-label="dóname, inicio"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <nav id="primary-nav" aria-label="Navegación principal">
+          <a class="nav-link" href="index.html">Inicio</a
+          ><a class="nav-link" href="explorar.html">Explorar</a
+          ><a class="nav-link" href="explorar.html?tipo=volunteer"
+            >Voluntariados</a
+          ><a class="nav-link active" href="guia.html" aria-current="page"
+            >Cómo funciona</a
+          ><button class="nav-link mobile-activity" data-action="activity">
+            Mi actividad
+          </button>
+        </nav>
+        <div class="nav-actions">
+          <label class="theme-control"
+            ><i class="ph ph-circle-half" aria-hidden="true"></i
+            ><span class="sr-only">Apariencia</span
+            ><select id="theme-preference" aria-label="Apariencia">
+              <option value="system">Sistema</option>
+              <option value="light">Claro</option>
+              <option value="dark">Oscuro</option>
+            </select></label
+          ><button
+            class="activity-button"
+            data-action="activity"
+            aria-label="Mi actividad"
+          >
+            <i class="ph ph-heart" aria-hidden="true"></i
+            ><span>Mi actividad</span
+            ><span id="saved-count" class="count" hidden>0</span></button
+          ><button
+            class="button primary publish-nav"
+            data-action="publish"
+            aria-label="Publicar"
+          >
+            <i class="ph ph-plus" aria-hidden="true"></i>Publicar</button
+          ><button
+            class="menu-button"
+            data-action="menu"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="primary-nav"
+          >
+            <i class="ph ph-list" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="contenido">
+      <section class="guide-hero shell">
+        <a class="breadcrumb" href="index.html"
+          ><i class="ph ph-arrow-left" aria-hidden="true"></i>Inicio</a
+        ><span class="section-kicker">DE PERSONA A PERSONA</span>
+        <h1>Ayudarnos puede<br />ser así de sencillo.</h1>
+        <p>
+          Lo que necesitas saber para dar, recibir y compartir con tranquilidad.
+        </p>
+        <a class="button primary" href="explorar.html"
+          >Explorar <i class="ph ph-arrow-up-right" aria-hidden="true"></i
+        ></a>
+      </section>
+      <section class="how-section shell scroll-reveal" id="como-funciona">
+        <div class="section-heading">
+          <div>
+            <h2>De un gesto a una conexión.</h2>
+            <p>Sin compras ni ventas. Solo personas que se ayudan.</p>
+          </div>
+          <a class="text-button" href="guia.html"
+            >Conoce cómo funciona
+            <i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div class="journey">
+          <article>
+            <span class="journey-icon"
+              ><i class="ph ph-magnifying-glass" aria-hidden="true"></i
+            ></span>
+            <h3>Encuentra una oportunidad</h3>
+            <p>
+              Busca por ciudad o por lo que necesitas. También puedes publicar
+              lo que quieres compartir.
+            </p>
+          </article>
+          <article>
+            <span class="journey-icon"
+              ><i class="ph ph-whatsapp-logo" aria-hidden="true"></i
+            ></span>
+            <h3>Hablen y coordinen</h3>
+            <p>
+              Contacta por WhatsApp si la persona lo autoriza. Conversen sobre
+              los detalles y acuerden la entrega.
+            </p>
+          </article>
+          <article>
+            <span class="journey-icon"
+              ><i class="ph ph-hand-heart" aria-hidden="true"></i
+            ></span>
+            <h3>Haz que algo bueno pase</h3>
+            <p>
+              Comparte el objeto, tu conocimiento o tu tiempo. Cada conexión
+              empieza con un pequeño gesto.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="guide-tips shell scroll-reveal">
+        <img
+          src="assets/seniors.webp"
+          alt="Una voluntaria y una persona mayor comparten una lectura"
+          width="600"
+          height="450"
+          loading="lazy"
+        />
+        <div>
+          <h2>Cuidarnos también <br />es parte de ayudar.</h2>
+          <div class="tip-row">
+            <i class="ph ph-map-pin" aria-hidden="true"></i>
+            <p>
+              <strong>Elijan un lugar de encuentro público.</strong> Acuerden
+              los detalles antes de desplazarse.
+            </p>
+          </div>
+          <div class="tip-row">
+            <i class="ph ph-chat-circle" aria-hidden="true"></i>
+            <p>
+              <strong>Hablen con claridad y respeto.</strong> Cuenta el estado
+              del objeto o lo que incluye tu servicio.
+            </p>
+          </div>
+          <div class="tip-row">
+            <i class="ph ph-users-three" aria-hidden="true"></i>
+            <p>
+              <strong
+                >Las actividades con menores se coordinan con una persona adulta
+                responsable.</strong
+              >
+              La ayuda se organiza con acompañamiento.
+            </p>
+          </div>
+          <button class="text-button" data-action="community">
+            Conoce los acuerdos de comunidad
+            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+      <section class="guide-faq shell scroll-reveal">
+        <h2>Preguntas con respuestas claras.</h2>
+        <div class="faq-list">
+          <details>
+            <summary>
+              ¿Todo lo que se publica es gratuito?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              Sí. dóname está pensado para compartir objetos, conocimientos y
+              tiempo sin cobrar. Esta maqueta no incluye compras, ventas ni
+              pagos.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Necesito una cuenta para usar la maqueta?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              No. Puedes explorar, publicar, guardar favoritos y probar las
+              constancias sin registrarte. Tu actividad se conserva solo en este
+              navegador.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Quién puede ver mi número de WhatsApp?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              Tu número solo se guarda y aparece en el detalle del anuncio si
+              marcas la autorización al publicar. Puedes editar tu anuncio para
+              retirarlo cuando quieras.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Mis publicaciones aparecen en otros dispositivos?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              Por ahora no. Este MVP utiliza almacenamiento local. Las
+              publicaciones de ejemplo se ven en todos los dispositivos, pero tu
+              actividad y tus anuncios nuevos quedan en el navegador donde los
+              creas.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Las constancias son certificados oficiales?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              Son una muestra del reconocimiento que podría entregar la
+              plataforma. En este MVP las horas son autodeclaradas y las
+              constancias no tienen acreditación institucional.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Qué hago si no encuentro lo que necesito?<i
+                class="ph ph-plus"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <p>
+              Publica una necesidad con un título claro, tu ciudad y una
+              descripción de la ayuda que buscas. También puedes probar otra
+              categoría o ampliar la búsqueda a todo Ecuador.
+            </p>
+          </details>
+        </div>
+      </section>
+      <section class="guide-demo shell">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        <div>
+          <h2>Estamos construyendo esta idea.</h2>
+          <p>
+            Esta es una maqueta funcional, sin cuentas ni backend. Los anuncios
+            iniciales son ejemplos y los cambios se guardan en tu navegador.
+            Puedes probar todo el recorrido sin enviar solicitudes reales.
+          </p>
+        </div>
+      </section>
+      <section class="closing shell scroll-reveal">
+        <span class="closing-flower" aria-hidden="true"
+          ><i class="ph ph-flower"></i
+        ></span>
+        <h2>No necesitas tener mucho.<br />Solo algo que compartir.</h2>
+        <div class="closing-actions">
+          <a class="button primary" href="explorar.html"
+            >Explorar <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a
+          ><button class="button outline" data-action="publish">
+            Quiero ayudar <i class="ph ph-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="shell footer-main">
+        <a class="brand" href="index.html"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <p>Lo que das, nos une.</p>
+        <a href="guia.html">Cómo funciona</a
+        ><button data-action="community">Cuidemos la comunidad</button
+        ><button data-action="privacy">Tus datos</button
+        ><span class="footer-country"
+          ><span class="ecuador-flag" aria-hidden="true"></span> Hecho para
+          Ecuador</span
+        >
+      </div>
+      <div class="shell footer-bottom">
+        <span>Un espacio para dar, recibir y conectar.</span
+        ><span>Sin compras. Sin ventas. Con propósito.</span>
+      </div>
+    </footer>
+    <dialog id="modal" class="modal" aria-labelledby="modal-title">
+      <div id="modal-content"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <button
+      class="back-top"
+      data-action="back-top"
+      aria-label="Volver arriba"
+      hidden
+    >
+      <i class="ph ph-arrow-up" aria-hidden="true"></i>
+    </button>
+  </body>
+</html>

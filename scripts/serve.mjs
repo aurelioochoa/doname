@@ -17,7 +17,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
     const target = path.resolve(
       root,
-      "." + decodeURIComponent(url.pathname === "/via" ? "" : url.pathname),
+      "." + decodeURIComponent(url.pathname),
     );
     if (target !== root && !target.startsWith(root + path.sep)) {
       res.writeHead(403).end();

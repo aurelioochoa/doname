@@ -373,3 +373,40 @@ export function saveState(storage, state) {
     return false;
   }
 }
+
+// URL state is shared independently from browser-local activity.
+export function readBrowseParams(search) {
+  const params = new URLSearchParams(search);
+  const type = params.get("tipo");
+  const city = params.get("ciudad");
+  const category = params.get("categoria");
+  const mode = params.get("modalidad");
+  const sort = params.get("orden");
+  return {
+    type: Object.hasOwn(types, type) ? type : "all",
+    city: cities.includes(city) ? city : "all",
+    query: (params.get("q") || "").slice(0, 120),
+    category:
+      typeof category === "string" && category.length < 65 ? category : "all",
+    mode: ["Presencial", "En línea"].includes(mode) ? mode : "all",
+    sort: ["recent", "oldest", "title"].includes(sort) ? sort : "recent",
+    savedOnly: params.get("guardados") === "1",
+  };
+}
+export function writeBrowseParams(filters) {
+  const params = new URLSearchParams();
+  for (const [key, param] of Object.entries({
+    type: "tipo",
+    city: "ciudad",
+    query: "q",
+    category: "categoria",
+    mode: "modalidad",
+    sort: "orden",
+  })) {
+    const value = filters[key];
+    if (value && value !== "all" && !(key === "sort" && value === "recent"))
+      params.set(param, value);
+  }
+  if (filters.savedOnly) params.set("guardados", "1");
+  return params.toString();
+}

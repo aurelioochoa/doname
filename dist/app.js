@@ -9,18 +9,18 @@ import {
   escapeHtml as e,
   loadState,
   saveState,
+  readBrowseParams,
+  writeBrowseParams,
 } from "./core.js";
 const $ = (s) => document.querySelector(s);
 const icon = (name) => `<i class="ph ph-${name}" aria-hidden="true"></i>`;
 const state = loadState(localStorage);
-const filters = {
-  type: "all",
-  city: "all",
-  query: "",
-  category: "all",
-  mode: "all",
-  sort: "recent",
-};
+const isExplore = Boolean($("#listings"));
+const filters = readBrowseParams(location.search);
+let viewMode = "grid";
+try {
+  viewMode = localStorage.getItem("doname-view") === "list" ? "list" : "grid";
+} catch {}
 let visible = 8,
   activityTab = "saved",
   toastTimer,
@@ -44,6 +44,7 @@ function persist() {
   return true;
 }
 function updateCount() {
+  if (!$("#saved-count")) return;
   $("#saved-count").textContent = state.saved.length;
   $("#saved-count").hidden = !state.saved.length;
 }
@@ -64,13 +65,15 @@ function badge(item) {
   return `<span class="type-label ${e(item.type)}">${icon(types[item.type]?.icon || "hand-heart")}${e(types[item.type]?.label || "Anuncio")}</span>`;
 }
 function render() {
-  const items = filterItems(allItems(), filters);
+  updateCount();
+  if (!isExplore) return;
+  const items = filterItems(allItems(), { ...filters, saved: state.saved });
   const shown = items.slice(0, visible);
   $("#listings").innerHTML = shown.length
     ? shown
         .map(
           (x, i) =>
-            `<article class="listing-card" style="--delay:${Math.min(i, 7) * 25}ms"><button class="save-button ${state.saved.includes(x.id) ? "saved" : ""}" data-save="${e(x.id)}" aria-label="${state.saved.includes(x.id) ? "Quitar de favoritos" : "Guardar"}: ${e(x.title)}" aria-pressed="${state.saved.includes(x.id)}">${icon("heart")}</button><button class="card-open" data-detail="${e(x.id)}" aria-label="Ver detalle: ${e(x.title)}"><div class="card-photo"><img src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="400" height="300" loading="lazy"></div><div class="card-body"><div class="card-type-row">${badge(x)}<span class="card-example">${x.demo ? "Ejemplo" : "Tu publicación"}</span></div><h3>${e(x.title)}</h3><div class="card-location">${icon("map-pin")}${e(x.city)}${x.mode === "En línea" ? '<span class="mode">· En línea</span>' : ""}</div><div class="card-footer"><span class="avatar">${e(x.initials)}</span><span>${e(x.person)}</span>${icon("arrow-up-right")}</div></div></button></article>`,
+            `<article class="listing-card" style="--delay:${Math.min(i, 7) * 25}ms"><button class="save-button ${state.saved.includes(x.id) ? "saved" : ""}" data-save="${e(x.id)}" aria-label="${state.saved.includes(x.id) ? "Quitar de favoritos" : "Guardar"}: ${e(x.title)}" aria-pressed="${state.saved.includes(x.id)}">${icon("heart")}</button><button class="card-open" data-detail="${e(x.id)}" aria-label="Ver detalle: ${e(x.title)}"><div class="card-photo"><img src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="400" height="300" loading="lazy"></div><div class="card-body"><div class="card-type-row">${badge(x)}<span class="card-example">${x.demo ? "Ejemplo" : "Tu publicación"}</span></div><h3>${e(x.title)}</h3><p class="card-excerpt">${e(x.description)}</p><div class="card-location">${icon("map-pin")}${e(x.city)}${x.mode === "En línea" ? '<span class="mode">· En línea</span>' : ""}</div><div class="card-footer"><span class="avatar">${e(x.initials)}</span><span>${e(x.person)}</span>${icon("arrow-up-right")}</div></div></button></article>`,
         )
         .join("")
     : `<div class="empty-state">${icon("magnifying-glass")}<h3>Aún no encontramos una coincidencia.</h3><p>Prueba otra palabra, cambia de ciudad o cuéntale a la comunidad lo que necesitas.</p><button class="button outline" data-action="clear">Limpiar filtros</button></div>`;
@@ -93,17 +96,67 @@ function render() {
         b.dataset.nav === (filters.type === "volunteer" ? "volunteer" : "all"),
       ),
     );
+  $("#listings").classList.toggle("list-view", viewMode === "list");
+  document
+    .querySelectorAll("[data-view]")
+    .forEach((b) =>
+      b.setAttribute("aria-pressed", b.dataset.view === viewMode),
+    );
+  document
+    .querySelector('[data-action="saved-only"]')
+    ?.setAttribute("aria-pressed", filters.savedOnly);
+  renderFilterChips();
+  syncBrowseUrl();
   updateCount();
 }
 function explore(type, category = "all") {
-  filters.type = type;
-  filters.category = category;
-  filters.query = "";
-  filters.mode = "all";
+  if (!isExplore) {
+    const query = writeBrowseParams({ type, category });
+    location.href = "explorar.html" + (query ? "?" + query : "");
+    return;
+  }
+  Object.assign(filters, {
+    type,
+    category,
+    query: "",
+    mode: "all",
+    savedOnly: false,
+  });
   $("#search").value = "";
   visible = 8;
   render();
-  $("#explorar").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#explorar").scrollIntoView({
+    behavior: reducedMotion.matches ? "instant" : "smooth",
+    block: "start",
+  });
+}
+function syncBrowseUrl() {
+  if (!isExplore) return;
+  const params = new URLSearchParams(writeBrowseParams(filters));
+  const post = new URLSearchParams(location.search).get("anuncio");
+  if (post) params.set("anuncio", post);
+  const next = location.pathname + (params.size ? "?" + params : "");
+  if (location.pathname + location.search !== next)
+    history.replaceState(null, "", next);
+}
+function renderFilterChips() {
+  const values = {
+    city: filters.city,
+    category: filters.category,
+    mode: filters.mode,
+    query: filters.query,
+  };
+  $("#active-filters").innerHTML =
+    Object.entries(values)
+      .filter(([, value]) => value && value !== "all")
+      .map(
+        ([key, value]) =>
+          `<button class="active-chip" data-remove-filter="${key}">${e(key === "query" ? "«" + value + "»" : value)} ${icon("x")}</button>`,
+      )
+      .join("") +
+    (filters.savedOnly
+      ? `<button class="active-chip" data-remove-filter="savedOnly">Mis guardados ${icon("x")}</button>`
+      : "");
 }
 function show(title, html) {
   uploadSequence++;
@@ -111,14 +164,29 @@ function show(title, html) {
     `<div class="modal-header"><h2 id="modal-title">${e(title)}</h2><button class="close-button" data-action="close" aria-label="Cerrar">${icon("x")}</button></div><div class="modal-body">${html}</div>`;
   if (!$("#modal").open) $("#modal").showModal();
   $("#modal").scrollTop = 0;
+  $("#modal .close-button")?.focus({ preventScroll: true });
   document.body.style.overflow = "hidden";
 }
 function close() {
+  if (isExplore) {
+    const url = new URL(location.href);
+    if (url.searchParams.has("anuncio")) {
+      url.searchParams.delete("anuncio");
+      history.replaceState(null, "", url.pathname + url.search);
+    }
+  }
   uploadSequence++;
   $("#modal").close();
   document.body.style.overflow = "";
 }
 $("#modal").addEventListener("close", () => {
+  if (isExplore) {
+    const url = new URL(location.href);
+    if (url.searchParams.has("anuncio")) {
+      url.searchParams.delete("anuncio");
+      history.replaceState(null, "", url.pathname + url.search);
+    }
+  }
   document.body.style.overflow = "";
 });
 $("#modal").addEventListener("click", (ev) => {
@@ -135,11 +203,16 @@ $("#modal").addEventListener("click", (ev) => {
 function detail(id) {
   const x = find(id);
   if (!x) return;
+  if (isExplore) {
+    const url = new URL(location.href);
+    url.searchParams.set("anuncio", id);
+    history.replaceState(null, "", url.pathname + url.search);
+  }
   const contact = whatsappUrl(x);
   const interested = state.interests.includes(id);
   show(
     types[x.type].label,
-    `<img class="detail-photo" src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="580" height="360">${badge(x)}<h3 class="detail-title">${e(x.title)}</h3><div class="detail-meta"><span>${icon("map-pin")}${e(x.city)}</span><span>${icon(x.mode === "En línea" ? "video-camera" : "users")}${e(x.mode)}</span><span>${icon("gift")}${e(x.condition || "Sin costo")}</span></div><p class="detail-description">${e(x.description)}</p><div class="detail-person"><span class="avatar">${e(x.initials)}</span><div><strong>${e(x.person)}</strong><small>${x.demo ? "Persona u organización de ejemplo" : "Publicado desde este navegador"}</small></div></div>${x.demo ? '<div class="detail-info">Este es un anuncio de ejemplo. Puedes guardar tu interés para probar el recorrido. No se enviará ningún mensaje ni solicitud.</div>' : !contact ? '<div class="detail-info">Esta persona no habilitó el contacto por WhatsApp. Puedes guardar tu interés en este navegador.</div>' : `<div class="detail-info">${icon("whatsapp-logo")} ${e(x.person)} autorizó mostrar su número: <strong>+${e(normalizePhone(x.phone))}</strong>. El botón abre WhatsApp; tú decides si envías el mensaje.</div>`}<div class="detail-actions">${contact && !x.fulfilled && !x.archived ? `<a class="button primary" href="${e(contact)}" target="_blank" rel="noopener noreferrer">${icon("whatsapp-logo")} Contactar por WhatsApp</a>` : x.fulfilled || x.archived ? '<span class="button outline">Este anuncio ya no está activo</span>' : `<button class="button primary" data-interest="${e(id)}">${icon(interested ? "check" : "hand-heart")}${interested ? "Interés guardado" : e(types[x.type].action)}</button>`}<button class="button outline" data-save="${e(id)}">${icon("heart")}<span>${state.saved.includes(id) ? "Guardado" : "Guardar"}</span></button></div>${state.posts.some((p) => p.id === id) ? `<p class="local-note"><button class="text-button" data-edit="${e(id)}">Editar mi publicación ${icon("pencil-simple")}</button></p>` : ""}`,
+    `<img class="detail-photo" src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="580" height="360">${badge(x)}<h3 class="detail-title">${e(x.title)}</h3><div class="detail-meta"><span>${icon("map-pin")}${e(x.city)}</span><span>${icon(x.mode === "En línea" ? "video-camera" : "users")}${e(x.mode)}</span><span>${icon("gift")}${e(x.condition || "Sin costo")}</span></div><p class="detail-description">${e(x.description)}</p><div class="detail-person"><span class="avatar">${e(x.initials)}</span><div><strong>${e(x.person)}</strong><small>${x.demo ? "Persona u organización de ejemplo" : "Publicado desde este navegador"}</small></div></div>${x.demo ? '<div class="detail-info">Este es un anuncio de ejemplo. Puedes guardar tu interés para probar el recorrido. No se enviará ningún mensaje ni solicitud.</div>' : !contact ? '<div class="detail-info">Esta persona no habilitó el contacto por WhatsApp. Puedes guardar tu interés en este navegador.</div>' : `<div class="detail-info">${icon("whatsapp-logo")} ${e(x.person)} autorizó mostrar su número: <strong>+${e(normalizePhone(x.phone))}</strong>. El botón abre WhatsApp; tú decides si envías el mensaje.</div>`}<div class="detail-actions">${contact && !x.fulfilled && !x.archived ? `<a class="button primary" href="${e(contact)}" target="_blank" rel="noopener noreferrer">${icon("whatsapp-logo")} Contactar por WhatsApp</a>` : x.fulfilled || x.archived ? '<span class="button outline">Este anuncio ya no está activo</span>' : `<button class="button primary" data-interest="${e(id)}">${icon(interested ? "check" : "hand-heart")}${interested ? "Interés guardado" : e(types[x.type].action)}</button>`}<button class="button outline" data-save="${e(id)}">${icon("heart")}<span>${state.saved.includes(id) ? "Guardado" : "Guardar"}</span></button></div><div class="detail-secondary">${x.demo ? `<button class="text-button" data-share="${e(id)}">${icon("link")}Copiar enlace del anuncio</button>` : '<span class="field-help">Tu anuncio es local y aún no tiene un enlace público.</span>'}<span>${icon("gift")}Todo se comparte gratis</span></div>${state.posts.some((p) => p.id === id) ? `<p class="local-note"><button class="text-button" data-edit="${e(id)}">Editar mi publicación ${icon("pencil-simple")}</button></p>` : ""}`,
   );
 }
 const categories = [
@@ -170,15 +243,21 @@ function field(name, label, html, help = "") {
 }
 function publish(id) {
   photoRemoved = false;
-  const item = id ? find(id) : null;
-  editingId = item?.demo ? null : item?.id || null;
+  let draft = null;
+  if (!id) {
+    try {
+      draft = JSON.parse(localStorage.getItem("doname-draft") || "null");
+    } catch {}
+  }
+  const item = id ? find(id) : draft;
+  editingId = id && !item?.demo ? item?.id || null : null;
   uploadData = item?.image?.startsWith("data:") ? item.image : "";
   const val = (n) => e(item?.[n] || "");
   const currentType =
     item?.type || (filters.type === "all" ? "object" : filters.type);
   show(
     editingId ? "Edita tu publicación" : "Algo bueno empieza contigo",
-    `<p class="modal-intro">Comparte lo que tienes, lo que sabes o lo que necesitas. Aquí todo es gratuito.</p><form id="publish-form" novalidate><div class="modal-tabs" role="group" aria-label="¿Qué quieres publicar?">${Object.entries(
+    `${draft ? '<div class="draft-notice">' + icon("note-pencil") + ' Retomamos tu borrador. <button data-action="discard-draft">Descartar</button></div>' : ""}<p class="modal-intro">Comparte lo que tienes, lo que sabes o lo que necesitas. Aquí todo es gratuito.</p><form id="publish-form" novalidate><div class="modal-tabs" role="group" aria-label="¿Qué quieres publicar?">${Object.entries(
       types,
     )
       .map(
@@ -191,6 +270,26 @@ function publish(id) {
   );
   $("#pub-photo").addEventListener("change", readPhoto);
   $("#publish-form").addEventListener("submit", submitPublish);
+  if (!editingId)
+    $("#publish-form").addEventListener("input", () => {
+      const form = $("#publish-form");
+      const fields = [
+        "type",
+        "title",
+        "description",
+        "city",
+        "mode",
+        "category",
+        "condition",
+        "person",
+      ];
+      const draft = Object.fromEntries(
+        fields.map((key) => [key, form.elements[key]?.value || ""]),
+      );
+      try {
+        localStorage.setItem("doname-draft", JSON.stringify(draft));
+      } catch {}
+    });
 }
 async function readPhoto(ev) {
   const sequence = ++uploadSequence;
@@ -310,6 +409,11 @@ function submitPublish(ev) {
       "No hay espacio suficiente para guardar la publicación. Prueba una imagen más pequeña.";
     return;
   }
+  if (!editingId) {
+    try {
+      localStorage.removeItem("doname-draft");
+    } catch {}
+  }
   render();
   show(
     editingId ? "Cambios guardados" : "Tu gesto ya tiene un lugar",
@@ -354,7 +458,7 @@ function activity(tab = "saved") {
   };
   show(
     "Mi actividad",
-    `<p class="modal-intro">Tus pequeños gestos, en un solo lugar. No necesitas una cuenta: todo queda en este navegador.</p><div class="activity-tabs">${Object.entries(
+    `<div class="activity-summary"><div><strong>${state.posts.filter((x) => !x.archived).length}</strong><span>publicaciones</span></div><div><strong>${state.saved.length}</strong><span>guardados</span></div><div><strong>${state.hours.filter((x) => !x.archived).reduce((sum, x) => sum + Number(x.hours), 0)}</strong><span>horas compartidas</span></div></div><p class="modal-intro">Tus pequeños gestos, en un solo lugar. No necesitas una cuenta: todo queda en este navegador.</p><div class="activity-tabs">${Object.entries(
       tabNames,
     )
       .map(
@@ -452,11 +556,48 @@ function how() {
     `<p class="modal-intro">Una comunidad que conecta lo que alguien puede compartir con lo que otra persona necesita.</p><div class="steps"><div class="step"><span>${icon("magnifying-glass")}</span><div><h3>Encuentra una conexión</h3><p>Explora objetos, servicios y voluntariados. Busca por palabra, ciudad, categoría o modalidad.</p></div></div><div class="step"><span>${icon("hand-heart")}</span><div><h3>Comparte o pide una mano</h3><p>Publica con una foto y una descripción. Puede ser una silla de ruedas, clases gratuitas o una necesidad de tu comunidad.</p></div></div><div class="step"><span>${icon("whatsapp-logo")}</span><div><h3>Coordina con la persona</h3><p>Cuando quien publica lo autoriza, puedes abrir su WhatsApp para conversar. En los ejemplos, solo se guarda tu interés.</p></div></div><div class="step"><span>${icon("certificate")}</span><div><h3>Reconoce el tiempo compartido</h3><p>Prueba el registro de horas y una constancia de ejemplo. En esta maqueta, las horas son autodeclaradas.</p></div></div></div><div class="detail-info" style="margin-top:23px">Esta primera versión no tiene cuentas. Las publicaciones, favoritos y horas quedan únicamente en este navegador.</div>`,
   );
 }
+function closeMenu() {
+  $(".nav").classList.remove("mobile-open");
+  const menu = $('[data-action="menu"]');
+  menu?.setAttribute("aria-expanded", "false");
+  menu?.setAttribute("aria-label", "Abrir menú");
+}
 const actions = {
   close,
+  menu: () => {
+    const open = !$(".nav").classList.contains("mobile-open");
+    $(".nav").classList.toggle("mobile-open", open);
+    const b = $('[data-action="menu"]');
+    b.setAttribute("aria-expanded", open);
+    b.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+    if (open) $("#primary-nav a")?.focus();
+  },
+  "back-top": () =>
+    window.scrollTo({
+      top: 0,
+      behavior: reducedMotion.matches ? "instant" : "smooth",
+    }),
+  "publish-need": () => {
+    filters.type = "need";
+    publish();
+  },
+  "saved-only": () => {
+    filters.savedOnly = !filters.savedOnly;
+    visible = 8;
+    render();
+  },
+  "share-search": () => copyText(location.href, "Enlace de búsqueda copiado."),
+  "discard-draft": () => {
+    try {
+      localStorage.removeItem("doname-draft");
+    } catch {}
+    publish();
+  },
   publish: () => publish(),
   activity: () => activity(),
-  how,
+  how: () => {
+    location.href = "guia.html";
+  },
   filters: extraFilters,
   certificate,
   "preview-cert": previewCertificate,
@@ -470,9 +611,12 @@ const actions = {
       mode: "all",
       sort: "recent",
     });
-    $("#search").value = "";
-    $("#city").value = "all";
-    $("#sort").value = "recent";
+    filters.savedOnly = false;
+    if (isExplore) {
+      $("#search").value = "";
+      $("#city").value = "all";
+      $("#sort").value = "recent";
+    }
     visible = 8;
     render();
     if ($("#modal").open) close();
@@ -494,7 +638,7 @@ const actions = {
   privacy: () =>
     show(
       "Tus datos, con claridad",
-      `<div class="simple-copy"><p>Esta maqueta no tiene login ni cuentas. Tus anuncios, favoritos y horas se guardan en el almacenamiento local de este navegador y no se comparten con otros visitantes.</p><p>Tu número de WhatsApp solo se guarda y muestra en el anuncio cuando marcas la casilla de autorización. Puedes editar tu publicación y retirarla cuando quieras.</p><p>El botón de contacto abre WhatsApp con un borrador de mensaje. Tú decides si lo envías. No se envían mensajes de forma automática.</p><p>Si borras los datos del sitio o cambias de navegador, tu actividad local no estará disponible. Este prototipo no utiliza analítica ni cookies publicitarias.</p></div>`,
+      `<div class="simple-copy"><p>Esta maqueta no tiene login ni cuentas. Tus anuncios, favoritos y horas se guardan en el almacenamiento local de este navegador y no se comparten con otros visitantes.</p><p>Tu número de WhatsApp solo se guarda y muestra en el anuncio cuando marcas la casilla de autorización. Puedes editar tu publicación y retirarla cuando quieras.</p><p>El botón de contacto abre WhatsApp con un borrador de mensaje. Tú decides si lo envías. No se envían mensajes de forma automática.</p><p>Si borras los datos del sitio o cambias de navegador, tu actividad local no estará disponible. También recordamos tu apariencia y la vista de resultados. El borrador de publicación conserva solo texto: no guarda teléfono ni foto. Este prototipo no utiliza analítica ni cookies publicitarias.</p></div>`,
     ),
 };
 document.addEventListener("click", (ev) => {
@@ -502,6 +646,9 @@ document.addEventListener("click", (ev) => {
   if (!b) return;
   const d = b.dataset;
   if (d.action && actions[d.action]) {
+    if (d.action !== "menu") {
+      closeMenu();
+    }
     ev.preventDefault();
     if (d.action !== "activity") delete $("#modal-content").dataset.view;
     actions[d.action]();
@@ -513,7 +660,28 @@ document.addEventListener("click", (ev) => {
     delete $("#modal-content").dataset.view;
     detail(d.detail);
   } else if (d.save) toggleSave(d.save);
-  else if (d.explore) {
+  else if (d.share) {
+    const url = new URL("explorar.html", location.href);
+    url.searchParams.set("anuncio", d.share);
+    copyText(url.href, "Enlace del anuncio copiado.");
+  } else if (d.view) {
+    viewMode = d.view;
+    try {
+      localStorage.setItem("doname-view", viewMode);
+    } catch {}
+    render();
+  } else if (d.removeFilter) {
+    filters[d.removeFilter] =
+      d.removeFilter === "query"
+        ? ""
+        : d.removeFilter === "savedOnly"
+          ? false
+          : "all";
+    if (d.removeFilter === "query") $("#search").value = "";
+    if (d.removeFilter === "city") $("#city").value = "all";
+    visible = 8;
+    render();
+  } else if (d.explore) {
     ev.preventDefault();
     explore(d.explore);
   } else if (d.cause) {
@@ -570,34 +738,99 @@ document.addEventListener("click", (ev) => {
     }
   }
 });
-$("#city").insertAdjacentHTML("beforeend", options(cities));
-$("#city").addEventListener("change", (ev) => {
-  filters.city = ev.target.value;
-  visible = 8;
-  render();
-});
-$("#sort").addEventListener("change", (ev) => {
-  filters.sort = ev.target.value;
-  visible = 8;
-  render();
-});
-$("#search-form").addEventListener("submit", (ev) => {
-  ev.preventDefault();
-  filters.query = $("#search").value;
-  visible = 8;
-  render();
-});
-let searchTimer;
-$("#search").addEventListener("input", () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+async function copyText(text, message) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast(message);
+  } catch {
+    show(
+      "Copia este enlace",
+      `<p class="modal-intro">Tu navegador no permitió copiar automáticamente. Puedes seleccionar este enlace.</p><div class="field"><label for="copy-link">Enlace</label><input id="copy-link" value="${e(text)}" readonly></div>`,
+    );
+    $("#copy-link").select();
+  }
+}
+if (isExplore) {
+  $("#city").insertAdjacentHTML("beforeend", options(cities));
+  $("#city").value = filters.city;
+  $("#search").value = filters.query;
+  $("#sort").value = filters.sort;
+  $("#city").addEventListener("change", (ev) => {
+    filters.city = ev.target.value;
+    visible = 8;
+    render();
+  });
+  $("#sort").addEventListener("change", (ev) => {
+    filters.sort = ev.target.value;
+    visible = 8;
+    render();
+  });
+  $("#search-form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
     filters.query = $("#search").value;
     visible = 8;
     render();
-  }, 250);
-});
-$("#load-more").addEventListener("click", () => {
-  visible += 8;
-  render();
-});
+  });
+  let searchTimer;
+  $("#search").addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      filters.query = $("#search").value;
+      visible = 8;
+      render();
+    }, 250);
+  });
+  $("#load-more").addEventListener("click", () => {
+    visible += 8;
+    render();
+  });
+}
 render();
+const initialPost = new URLSearchParams(location.search).get("anuncio");
+if (initialPost) {
+  if (find(initialPost)) detail(initialPost);
+  else toast("Este anuncio no está disponible en este navegador.");
+}
+addEventListener("popstate", () => {
+  if (!isExplore) return;
+  Object.assign(filters, readBrowseParams(location.search));
+  $("#city").value = filters.city;
+  $("#search").value = filters.query;
+  $("#sort").value = filters.sort;
+  render();
+  const id = new URLSearchParams(location.search).get("anuncio");
+  if (id && find(id)) detail(id);
+  else if ($("#modal").open) close();
+});
+addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && $(".mobile-open")) {
+    closeMenu();
+    $('[data-action="menu"]').focus();
+  }
+});
+// Reveal content as it enters the viewport. Informational content stays still afterwards.
+const reveals = document.querySelectorAll(".scroll-reveal");
+if (!reducedMotion.matches && "IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries)
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+    },
+    { threshold: 0.08 },
+  );
+  reveals.forEach((element) => {
+    element.classList.add("will-reveal");
+    observer.observe(element);
+  });
+  const topObserver = new IntersectionObserver((entries) => {
+    $('[data-action="back-top"]').hidden = entries[0].isIntersecting;
+  });
+  const sentinel = document.querySelector(
+    ".hero, .section-heading, .guide-hero",
+  );
+  if (sentinel) topObserver.observe(sentinel);
+}
