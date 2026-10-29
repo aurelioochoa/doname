@@ -30,4 +30,6 @@ Las ventanas mantienen visible el encabezado al desplazarse y enfocan su botón 
 
 ## Publicación
 
-Repositorio público y despliegue final de Pages: evidencia en `GATES.md`. El sitio publicado conserva las limitaciones del almacenamiento local descritas en el README.
+Repositorio público `aurelioochoa/doname`. GitHub Actions 40954025033, intento 2: comprobación y despliegue correctos. Landing, catálogo y guía devolvieron HTTP 200. En Brave sobre GitHub Pages se verificó tema oscuro persistente y la búsqueda Servicios + Cuenca + matematicas, con una coincidencia y sin errores de consola.
+
+Evidencia en `GATES.md`. El sitio publicado conserva las limitaciones del almacenamiento local descritas en el README.

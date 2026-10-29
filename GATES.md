@@ -16,8 +16,8 @@ Scope: Ampliar el MVP sin cuentas con landing y exploración separadas, modo cla
 - [x] G4: Animaciones, teclado, menú móvil y nuevos recorridos funcionan sin desbordar la pantalla
   EVIDENCE: Brave: nueve comprobaciones de ancho en tres páginas a 320/768/1280, todas sin desbordamiento; menú móvil/actividad, FAQ, borrador, publicación desde landing y Escape comprobados. Consola sin errores. Capturas en design/v2-*.jpg.
 
-- [ ] G5: El repositorio público de aurelioochoa contiene el código y el flujo de publicación
-  EVIDENCE: pending
+- [x] G5: El repositorio público de aurelioochoa contiene el código y el flujo de publicación
+  EVIDENCE: GitHub API confirmó aurelioochoa/doname con visibility=public, main y homepage configurada. Commit 19534db9b0b0a1ab75173317566cf941e3a3502f subido con el workflow .github/workflows/pages.yml; git origin apunta al repositorio público.
 
-- [ ] G6: GitHub Pages publica la versión final y responde correctamente bajo la ruta del repositorio
-  EVIDENCE: pending
+- [x] G6: GitHub Pages publica la versión final y responde correctamente bajo la ruta del repositorio
+  EVIDENCE: GitHub Actions run 40954025033, intento 2: verify=success y deploy=success. Pages confirmó https://aurelioochoa.github.io/doname/. Landing, explorar.html y guia.html devolvieron HTTP 200. Brave público: tema oscuro y búsqueda Servicios/Cuenca/matematicas => una coincidencia bajo /doname/, sin errores de consola.
