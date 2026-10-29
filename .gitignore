@@ -1,0 +1,5 @@
+node_modules/
+.unlazy/
+.claude/settings.local.json
+.unlazy-hook-state.json
+*.tar.gz

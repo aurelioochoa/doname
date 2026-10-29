@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es-EC">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#236248" />
+    <meta
+      name="description"
+      content="Lo que das, nos une. Explora dóname, una comunidad para donar objetos, compartir conocimientos, pedir ayuda y encontrar voluntariados en Ecuador."
+    />
+    <title>dóname · Lo que das, nos une</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23236248'/%3E%3Ctext x='16' y='47' fill='white' font-family='Arial' font-weight='bold' font-size='49'%3Ed%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="assets/jakarta-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/icons/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#explorar">Saltar a los anuncios</a>
+    <header class="header">
+      <div class="shell nav">
+        <a class="brand" href="#inicio" aria-label="dóname, inicio"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <nav aria-label="Navegación principal">
+          <a class="nav-link active" href="#explorar" data-nav="all">Explorar</a
+          ><a class="nav-link" href="#voluntariados" data-nav="volunteer"
+            >Voluntariados</a
+          ><button class="nav-link" data-action="how">Cómo funciona</button>
+        </nav>
+        <div class="nav-actions">
+          <button
+            class="activity-button"
+            data-action="activity"
+            aria-label="Mi actividad"
+          >
+            <i class="ph ph-heart" aria-hidden="true"></i
+            ><span>Mi actividad</span
+            ><span id="saved-count" class="count" hidden>0</span></button
+          ><button class="button primary publish-nav" data-action="publish">
+            <i class="ph ph-plus" aria-hidden="true"></i> Publicar
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="inicio">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow"
+            ><span class="ecuador-flag" aria-hidden="true"></span> DE PERSONA A
+            PERSONA, EN ECUADOR</span
+          >
+          <h1 id="hero-title">Lo que das,<br /><span>nos une.</span></h1>
+          <p>
+            Eso que tienes. Eso que sabes.<br />Puede ser justo lo que alguien
+            necesita.
+          </p>
+          <div class="hero-actions">
+            <button class="button primary" data-action="publish">
+              Quiero ayudar
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i></button
+            ><a class="text-button" href="#explorar" data-explore="need"
+              >Busco ayuda <i class="ph ph-arrow-right" aria-hidden="true"></i
+            ></a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="hero-orbit" aria-hidden="true"></div>
+          <img
+            class="hero-photo"
+            src="assets/community.webp"
+            alt="Dos mujeres comparten una caja de donaciones en un patio de Quito. Imagen creada para dóname."
+            width="700"
+            height="560"
+            fetchpriority="high"
+          /><span class="photo-flower" aria-hidden="true"
+            ><i class="ph ph-flower"></i
+          ></span>
+          <div class="photo-note">
+            <span class="note-icon"
+              ><i class="ph ph-hand-heart" aria-hidden="true"></i
+            ></span>
+            <div>Un pequeño gesto.<strong>Una gran diferencia.</strong></div>
+          </div>
+        </div>
+      </section>
+      <section class="pathways shell" aria-label="Formas de conectar">
+        <button data-explore="object">
+          <span class="path-icon"
+            ><i class="ph ph-package" aria-hidden="true"></i></span
+          ><span
+            ><strong>Dona un objeto</strong
+            ><small>Dale una nueva historia</small></span
+          ><i class="ph ph-arrow-up-right" aria-hidden="true"></i></button
+        ><button data-explore="service">
+          <span class="path-icon"
+            ><i class="ph ph-chalkboard-teacher" aria-hidden="true"></i></span
+          ><span
+            ><strong>Comparte lo que sabes</strong
+            ><small>Tu talento puede ayudar</small></span
+          ><i class="ph ph-arrow-up-right" aria-hidden="true"></i></button
+        ><button data-explore="need">
+          <span class="path-icon"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          ><span
+            ><strong>Encuentra una mano</strong
+            ><small>Pedir ayuda también nos une</small></span
+          ><i class="ph ph-arrow-up-right" aria-hidden="true"></i></button
+        ><button data-explore="volunteer">
+          <span class="path-icon"
+            ><i class="ph ph-users-three" aria-hidden="true"></i></span
+          ><span
+            ><strong>Regala tu tiempo</strong
+            ><small>Conecta con una causa</small></span
+          ><i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </button>
+      </section>
+      <section
+        class="explore shell"
+        id="explorar"
+        aria-labelledby="explore-title"
+      >
+        <div class="section-heading">
+          <div>
+            <h2 id="explore-title">Hay mucho bueno por compartir.</h2>
+            <p>Encuentra una oportunidad de ayudar, cerquita de ti.</p>
+          </div>
+          <span class="free-note"
+            ><i class="ph ph-sparkle" aria-hidden="true"></i> Aquí, todo se
+            comparte gratis</span
+          >
+        </div>
+        <form id="search-form" class="search-bar" role="search">
+          <div class="search-field">
+            <i class="ph ph-magnifying-glass" aria-hidden="true"></i
+            ><label class="sr-only" for="search"
+              >Buscar objetos, servicios o causas</label
+            ><input
+              id="search"
+              name="search"
+              type="search"
+              placeholder="¿Qué necesitas o qué te gustaría compartir?"
+              autocomplete="off"
+            />
+          </div>
+          <div class="location-field">
+            <i class="ph ph-map-pin" aria-hidden="true"></i
+            ><label class="sr-only" for="city">Ciudad</label
+            ><select id="city">
+              <option value="all">Todo Ecuador</option></select
+            ><i class="ph ph-caret-down" aria-hidden="true"></i>
+          </div>
+          <button class="button primary search-submit" type="submit">
+            Buscar <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </button>
+        </form>
+        <div class="filter-row">
+          <div class="type-tabs" role="group" aria-label="Tipo de anuncio">
+            <button
+              class="filter-tab selected"
+              data-type="all"
+              aria-pressed="true"
+            >
+              <i class="ph ph-squares-four" aria-hidden="true"></i>Todo</button
+            ><button class="filter-tab" data-type="object" aria-pressed="false">
+              <i class="ph ph-package" aria-hidden="true"></i>Objetos</button
+            ><button
+              class="filter-tab"
+              data-type="service"
+              aria-pressed="false"
+            >
+              <i class="ph ph-chalkboard-teacher" aria-hidden="true"></i
+              >Servicios</button
+            ><button class="filter-tab" data-type="need" aria-pressed="false">
+              <i class="ph ph-hand-heart" aria-hidden="true"></i
+              >Necesidades</button
+            ><button
+              class="filter-tab"
+              data-type="volunteer"
+              aria-pressed="false"
+            >
+              <i class="ph ph-users-three" aria-hidden="true"></i>Voluntariados
+            </button>
+          </div>
+          <button class="button filter-more" data-action="filters">
+            <i class="ph ph-sliders-horizontal" aria-hidden="true"></i> Filtros
+            <span id="filter-count"></span>
+          </button>
+        </div>
+        <div class="results-line">
+          <p id="results-count" role="status" aria-live="polite"></p>
+          <label class="sort-label" for="sort"
+            >Ordenar:
+            <select id="sort">
+              <option value="recent">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+              <option value="title">Título: A a Z</option>
+            </select></label
+          >
+        </div>
+        <div id="listings" class="listing-grid"></div>
+        <div class="load-more-wrap">
+          <button id="load-more" class="button outline">
+            Ver más oportunidades
+            <i class="ph ph-arrow-down" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="demo-note">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          <p>
+            Estás explorando una maqueta funcional. Los anuncios iniciales son
+            ejemplos. Tus publicaciones y favoritos se guardan en este
+            navegador.
+          </p>
+        </div>
+      </section>
+      <section
+        class="volunteer-feature shell"
+        id="voluntariados"
+        aria-labelledby="volunteer-title"
+      >
+        <div class="volunteer-photo">
+          <img
+            src="assets/garden.jpg"
+            alt="Plantas de un huerto, una forma de cuidar el entorno en comunidad"
+            width="600"
+            height="450"
+            loading="lazy"
+          />
+          <div class="volunteer-stamp">
+            <i class="ph ph-plant" aria-hidden="true"></i> Crecemos cuando<br />ayudamos.
+          </div>
+        </div>
+        <div class="volunteer-copy">
+          <span class="section-kicker">TU TIEMPO TAMBIÉN ES UN REGALO</span>
+          <h2 id="volunteer-title">
+            Hay una causa<br />que te está esperando.
+          </h2>
+          <p>
+            Acompañar a una persona mayor. Cuidar animales. Apoyar a un niño con
+            sus tareas. Encuentra dónde poner tu corazón.
+          </p>
+          <div class="cause-tags">
+            <button data-cause="Personas mayores">
+              <i class="ph ph-hand-heart" aria-hidden="true"></i>Personas
+              mayores</button
+            ><button data-cause="Animales">
+              <i class="ph ph-paw-print" aria-hidden="true"></i>Animales</button
+            ><button data-cause="Niñas y niños">
+              <i class="ph ph-book-open" aria-hidden="true"></i>Niñas y niños
+            </button>
+          </div>
+          <button class="text-button" data-explore="volunteer">
+            Explorar voluntariados
+            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+      <section
+        class="certificate-feature shell"
+        aria-labelledby="certificate-title"
+      >
+        <div class="certificate-icon">
+          <i class="ph ph-certificate" aria-hidden="true"></i>
+        </div>
+        <div>
+          <h2 id="certificate-title">El tiempo que das merece un gracias.</h2>
+          <p>
+            Registra tus horas de servicio y prueba cómo se vería tu constancia
+            de participación.
+          </p>
+        </div>
+        <button class="button outline" data-action="certificate">
+          Ver mi constancia
+          <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </button>
+      </section>
+      <section class="closing shell">
+        <span class="closing-flower" aria-hidden="true"
+          ><i class="ph ph-flower"></i
+        ></span>
+        <h2>No necesitas tener mucho.<br />Solo algo que compartir.</h2>
+        <button class="button primary" data-action="publish">
+          Quiero ayudar <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </button>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="shell footer-main">
+        <a class="brand" href="#inicio"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <p>Lo que das, nos une.</p>
+        <button data-action="how">Cómo funciona</button
+        ><button data-action="community">Cuidemos la comunidad</button
+        ><button data-action="privacy">Tus datos</button
+        ><span class="footer-country"
+          ><span class="ecuador-flag" aria-hidden="true"></span> Hecho para
+          Ecuador</span
+        >
+      </div>
+      <div class="shell footer-bottom">
+        <span>Un espacio para dar, recibir y conectar.</span
+        ><span>Sin compras. Sin ventas. Con propósito.</span>
+      </div>
+    </footer>
+    <dialog id="modal" class="modal" aria-labelledby="modal-title">
+      <div id="modal-content"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
