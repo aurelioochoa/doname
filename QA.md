@@ -33,3 +33,17 @@ Las ventanas mantienen visible el encabezado al desplazarse y enfocan su botón 
 Repositorio público `aurelioochoa/doname`. GitHub Actions 40954025033, intento 2: comprobación y despliegue correctos. Landing, catálogo y guía devolvieron HTTP 200. En Brave sobre GitHub Pages se verificó tema oscuro persistente y la búsqueda Servicios + Cuenca + matematicas, con una coincidencia y sin errores de consola.
 
 Evidencia en `GATES.md`. El sitio publicado conserva las limitaciones del almacenamiento local descritas en el README.
+
+## Ampliación de oportunidades y publicación
+
+- Se midieron 40 ejemplos únicos, con 10 por cada tipo. El navegador devuelve 10 al filtrar objetos, servicios, necesidades y voluntariados; cargar más muestra 16 tarjetas.
+- Los ejemplos sin foto usan una ilustración con la familia de iconos del proyecto; no se sustituyen por fotos de objetos diferentes.
+- Publicar abre una página independiente con tres pasos, vista previa y borrador.
+- Paso de detalles vacío muestra errores junto a título y descripción y enfoca el primero. El paso de conexión valida ciudad y nombre antes de guardar.
+- Una foto JPG local se procesó y apareció en la vista previa. Se creó el anuncio y su detalle mostró la foto, ciudad, modalidad y descripción.
+- Se publicó con un teléfono de prueba sin marcar autorización: el detalle no mostró el número ni un enlace de contacto.
+- Editar abre la misma pantalla con el anuncio. Se retiró la foto, se cambió el título y se autorizó un teléfono de prueba: el detalle mostró ilustración, título actualizado y enlace de WhatsApp. No se abrió WhatsApp ni se envió un mensaje.
+- La publicación de prueba se archivó y el catálogo volvió a 40 ejemplos visibles.
+- El borrador recuperó tipo, título y descripción al recargar. Empezar de nuevo restableció el formulario.
+- Se revisaron los pasos de la publicación en móvil y tablet: ocho mediciones en viewports 320, 390, 768 y 1280, todas sin desbordamiento horizontal.
+- La revisión del nuevo recorrido no mostró errores de JavaScript.

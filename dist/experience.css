@@ -1823,3 +1823,116 @@ html[data-theme="dark"] .field textarea::placeholder {
   border-bottom: 1px solid var(--line);
   margin-bottom: 16px;
 }
+.item-illustration {
+  height: 100%;
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--pale);
+  color: var(--green);
+  position: relative;
+  overflow: hidden;
+}
+.item-illustration:before,
+.item-illustration:after {
+  content: "";
+  position: absolute;
+  border: 1px solid currentColor;
+  opacity: 0.09;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  transform: translate(-70px, 50px);
+}
+.item-illustration:after {
+  width: 140px;
+  height: 140px;
+  transform: translate(95px, -40px);
+}
+.item-illustration > .ph {
+  font-size: 68px;
+  z-index: 1;
+  transition: transform 0.4s var(--spring);
+}
+.item-illustration > span {
+  font-size: 10px;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  z-index: 1;
+  opacity: 0.8;
+}
+.listing-card:hover .item-illustration > .ph {
+  transform: rotate(-7deg) translateY(-3px);
+}
+.item-illustration.need {
+  background: #f2e9d8;
+  color: #8a6b36;
+}
+.item-illustration.service {
+  background: #e9edf3;
+  color: #5f7487;
+}
+.item-illustration.volunteer {
+  background: #eee9f3;
+  color: #79628a;
+}
+.item-illustration.detail-photo {
+  height: 270px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+.item-illustration.detail-photo > .ph {
+  font-size: 100px;
+}
+.activity-illustration {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 65px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--pale);
+  color: var(--green);
+}
+.activity-illustration i {
+  font-size: 32px;
+}
+.preview-photo .item-illustration > .ph {
+  font-size: 85px;
+}
+html[data-theme="dark"] .item-illustration.need {
+  background: #40351f;
+  color: #e5cca1;
+}
+html[data-theme="dark"] .item-illustration.service {
+  background: #2a3546;
+  color: #c0cde7;
+}
+html[data-theme="dark"] .item-illustration.volunteer {
+  background: #3a2f46;
+  color: #d8c6e9;
+}
+@media (max-width: 700px) {
+  .item-illustration > .ph {
+    font-size: 54px;
+  }
+  .item-illustration > span {
+    font-size: 8px;
+  }
+  .item-illustration.detail-photo {
+    height: 220px;
+  }
+  .item-illustration.detail-photo > .ph {
+    font-size: 80px;
+  }
+  .list-view .item-illustration > .ph {
+    font-size: 42px;
+  }
+  .list-view .item-illustration > span {
+    font-size: 7px;
+  }
+}

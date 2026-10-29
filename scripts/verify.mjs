@@ -15,9 +15,10 @@ import {
   writeBrowseParams,
 } from "../dist/core.js";
 for (const file of [
-  "dist/app.js",
-  "dist/core.js",
-  "dist/theme.js",
+  ...fs
+    .readdirSync("dist")
+    .filter((x) => x.endsWith(".js"))
+    .map((x) => "dist/" + x),
   "scripts/serve.mjs",
 ]) {
   const result = spawnSync(process.execPath, ["--check", file], {
@@ -121,7 +122,8 @@ const css =
   fs.readFileSync("dist/styles.css", "utf8") +
   fs.readFileSync("dist/experience.css", "utf8");
 for (const x of seed) {
-  assert.ok(fs.existsSync(path.join("dist", x.image)), x.image);
+  if (x.image)
+    assert.ok(fs.statSync(path.join("dist", x.image)).isFile(), x.image);
   assert.equal(x.demo, true);
   assert.equal(whatsappUrl(x), null);
 }
@@ -140,6 +142,7 @@ for (const i of [...html.matchAll(/ph ph-([a-z-]+)/g)].map((x) => x[1]))
   assert.ok(icons.includes(".ph-" + i + ":"), i);
 const exploreHtml = fs.readFileSync("dist/explorar.html", "utf8");
 const guideHtml = fs.readFileSync("dist/guia.html", "utf8");
+const publishHtml = fs.readFileSync("dist/publicar.html", "utf8");
 assert.ok(exploreHtml.includes("maqueta funcional"));
 assert.ok(!html.includes('id="listings"'));
 assert.ok(!html.includes('id="search-form"'));
@@ -149,6 +152,7 @@ for (const [name, source] of [
   ["index.html", html],
   ["explorar.html", exploreHtml],
   ["guia.html", guideHtml],
+  ["publicar.html", publishHtml],
 ]) {
   assert.equal(
     [...source.matchAll(/<h1[ >]/g)].length,

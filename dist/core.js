@@ -1,3 +1,4 @@
+import { extraOpportunities } from "./opportunities.js";
 export const cities = [
   "Quito",
   "Guayaquil",
@@ -264,6 +265,8 @@ export const seed = [
     demo: true,
   },
 ];
+seed.push(...extraOpportunities);
+
 export function normalize(text = "") {
   return String(text)
     .normalize("NFD")

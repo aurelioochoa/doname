@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "test": "node scripts/verify.mjs"
+    "test": "node scripts/verify.mjs && node scripts/check-opportunities.mjs"
   },
   "dependencies": {
     "@fontsource/dm-sans": "^5.2.0",

@@ -3,7 +3,6 @@ import {
   types,
   seed,
   filterItems,
-  validateListing,
   normalizePhone,
   whatsappUrl,
   escapeHtml as e,
@@ -11,9 +10,9 @@ import {
   saveState,
   readBrowseParams,
   writeBrowseParams,
-} from "./core.js";
+} from "./core.js?v=3";
 const $ = (s) => document.querySelector(s);
-const icon = (name) => `<i class="ph ph-${name}" aria-hidden="true"></i>`;
+const icon = (name) => `<i class="ph ph-${e(name)}" aria-hidden="true"></i>`;
 const state = loadState(localStorage);
 const isExplore = Boolean($("#listings"));
 const filters = readBrowseParams(location.search);
@@ -23,11 +22,7 @@ try {
 } catch {}
 let visible = 8,
   activityTab = "saved",
-  toastTimer,
-  uploadData = "",
-  editingId = null,
-  photoRemoved = false,
-  uploadSequence = 0;
+  toastTimer;
 const allItems = (includeInactive = false) =>
   [...state.posts, ...seed].filter(
     (x) => includeInactive || (!x.fulfilled && !x.archived),
@@ -59,7 +54,20 @@ function safeImage(item) {
     item.image || "",
   )
     ? item.image
-    : "assets/community.webp";
+    : null;
+}
+function photoMarkup(item, context = "card") {
+  const src = safeImage(item);
+  if (src)
+    return `<img class="${context === "detail" ? "detail-photo" : ""}" src="${e(src)}" alt="${e(item.imageAlt || item.title)}" width="${context === "detail" ? 580 : 400}" height="${context === "detail" ? 360 : 300}" loading="lazy">`;
+  const kind = types[item.type] || types.object;
+  return `<div class="item-illustration ${e(item.type)} ${context === "detail" ? "detail-photo" : ""}" role="img" aria-label="Ilustración de ${e(kind.label.toLowerCase())}">${icon(item.illustration || kind.icon)}<span>${e(kind.label)}</span></div>`;
+}
+function activityPhoto(item) {
+  const src = safeImage(item);
+  return src
+    ? `<img src="${e(src)}" alt="${e(item.title)}">`
+    : `<span class="activity-illustration ${e(item.type)}" aria-hidden="true">${icon(item.illustration || types[item.type]?.icon || "hand-heart")}</span>`;
 }
 function badge(item) {
   return `<span class="type-label ${e(item.type)}">${icon(types[item.type]?.icon || "hand-heart")}${e(types[item.type]?.label || "Anuncio")}</span>`;
@@ -73,7 +81,7 @@ function render() {
     ? shown
         .map(
           (x, i) =>
-            `<article class="listing-card" style="--delay:${Math.min(i, 7) * 25}ms"><button class="save-button ${state.saved.includes(x.id) ? "saved" : ""}" data-save="${e(x.id)}" aria-label="${state.saved.includes(x.id) ? "Quitar de favoritos" : "Guardar"}: ${e(x.title)}" aria-pressed="${state.saved.includes(x.id)}">${icon("heart")}</button><button class="card-open" data-detail="${e(x.id)}" aria-label="Ver detalle: ${e(x.title)}"><div class="card-photo"><img src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="400" height="300" loading="lazy"></div><div class="card-body"><div class="card-type-row">${badge(x)}<span class="card-example">${x.demo ? "Ejemplo" : "Tu publicación"}</span></div><h3>${e(x.title)}</h3><p class="card-excerpt">${e(x.description)}</p><div class="card-location">${icon("map-pin")}${e(x.city)}${x.mode === "En línea" ? '<span class="mode">· En línea</span>' : ""}</div><div class="card-footer"><span class="avatar">${e(x.initials)}</span><span>${e(x.person)}</span>${icon("arrow-up-right")}</div></div></button></article>`,
+            `<article class="listing-card" style="--delay:${Math.min(i, 7) * 25}ms"><button class="save-button ${state.saved.includes(x.id) ? "saved" : ""}" data-save="${e(x.id)}" aria-label="${state.saved.includes(x.id) ? "Quitar de favoritos" : "Guardar"}: ${e(x.title)}" aria-pressed="${state.saved.includes(x.id)}">${icon("heart")}</button><button class="card-open" data-detail="${e(x.id)}" aria-label="Ver detalle: ${e(x.title)}"><div class="card-photo">${photoMarkup(x)}</div><div class="card-body"><div class="card-type-row">${badge(x)}<span class="card-example">${x.demo ? "Ejemplo" : "Tu publicación"}</span></div><h3>${e(x.title)}</h3><p class="card-excerpt">${e(x.description)}</p><div class="card-location">${icon("map-pin")}${e(x.city)}${x.mode === "En línea" ? '<span class="mode">· En línea</span>' : ""}</div><div class="card-footer"><span class="avatar">${e(x.initials)}</span><span>${e(x.person)}</span>${icon("arrow-up-right")}</div></div></button></article>`,
         )
         .join("")
     : `<div class="empty-state">${icon("magnifying-glass")}<h3>Aún no encontramos una coincidencia.</h3><p>Prueba otra palabra, cambia de ciudad o cuéntale a la comunidad lo que necesitas.</p><button class="button outline" data-action="clear">Limpiar filtros</button></div>`;
@@ -159,7 +167,6 @@ function renderFilterChips() {
       : "");
 }
 function show(title, html) {
-  uploadSequence++;
   $("#modal-content").innerHTML =
     `<div class="modal-header"><h2 id="modal-title">${e(title)}</h2><button class="close-button" data-action="close" aria-label="Cerrar">${icon("x")}</button></div><div class="modal-body">${html}</div>`;
   if (!$("#modal").open) $("#modal").showModal();
@@ -175,7 +182,6 @@ function close() {
       history.replaceState(null, "", url.pathname + url.search);
     }
   }
-  uploadSequence++;
   $("#modal").close();
   document.body.style.overflow = "";
 }
@@ -212,7 +218,7 @@ function detail(id) {
   const interested = state.interests.includes(id);
   show(
     types[x.type].label,
-    `<img class="detail-photo" src="${e(safeImage(x))}" alt="${e(x.imageAlt || x.title)}" width="580" height="360">${badge(x)}<h3 class="detail-title">${e(x.title)}</h3><div class="detail-meta"><span>${icon("map-pin")}${e(x.city)}</span><span>${icon(x.mode === "En línea" ? "video-camera" : "users")}${e(x.mode)}</span><span>${icon("gift")}${e(x.condition || "Sin costo")}</span></div><p class="detail-description">${e(x.description)}</p><div class="detail-person"><span class="avatar">${e(x.initials)}</span><div><strong>${e(x.person)}</strong><small>${x.demo ? "Persona u organización de ejemplo" : "Publicado desde este navegador"}</small></div></div>${x.demo ? '<div class="detail-info">Este es un anuncio de ejemplo. Puedes guardar tu interés para probar el recorrido. No se enviará ningún mensaje ni solicitud.</div>' : !contact ? '<div class="detail-info">Esta persona no habilitó el contacto por WhatsApp. Puedes guardar tu interés en este navegador.</div>' : `<div class="detail-info">${icon("whatsapp-logo")} ${e(x.person)} autorizó mostrar su número: <strong>+${e(normalizePhone(x.phone))}</strong>. El botón abre WhatsApp; tú decides si envías el mensaje.</div>`}<div class="detail-actions">${contact && !x.fulfilled && !x.archived ? `<a class="button primary" href="${e(contact)}" target="_blank" rel="noopener noreferrer">${icon("whatsapp-logo")} Contactar por WhatsApp</a>` : x.fulfilled || x.archived ? '<span class="button outline">Este anuncio ya no está activo</span>' : `<button class="button primary" data-interest="${e(id)}">${icon(interested ? "check" : "hand-heart")}${interested ? "Interés guardado" : e(types[x.type].action)}</button>`}<button class="button outline" data-save="${e(id)}">${icon("heart")}<span>${state.saved.includes(id) ? "Guardado" : "Guardar"}</span></button></div><div class="detail-secondary">${x.demo ? `<button class="text-button" data-share="${e(id)}">${icon("link")}Copiar enlace del anuncio</button>` : '<span class="field-help">Tu anuncio es local y aún no tiene un enlace público.</span>'}<span>${icon("gift")}Todo se comparte gratis</span></div>${state.posts.some((p) => p.id === id) ? `<p class="local-note"><button class="text-button" data-edit="${e(id)}">Editar mi publicación ${icon("pencil-simple")}</button></p>` : ""}`,
+    `${photoMarkup(x, "detail")}${badge(x)}<h3 class="detail-title">${e(x.title)}</h3><div class="detail-meta"><span>${icon("map-pin")}${e(x.city)}</span><span>${icon(x.mode === "En línea" ? "video-camera" : "users")}${e(x.mode)}</span><span>${icon("gift")}${e(x.condition || "Sin costo")}</span></div><p class="detail-description">${e(x.description)}</p><div class="detail-person"><span class="avatar">${e(x.initials)}</span><div><strong>${e(x.person)}</strong><small>${x.demo ? "Persona u organización de ejemplo" : "Publicado desde este navegador"}</small></div></div>${x.demo ? '<div class="detail-info">Este es un anuncio de ejemplo. Puedes guardar tu interés para probar el recorrido. No se enviará ningún mensaje ni solicitud.</div>' : !contact ? '<div class="detail-info">Esta persona no habilitó el contacto por WhatsApp. Puedes guardar tu interés en este navegador.</div>' : `<div class="detail-info">${icon("whatsapp-logo")} ${e(x.person)} autorizó mostrar su número: <strong>+${e(normalizePhone(x.phone))}</strong>. El botón abre WhatsApp; tú decides si envías el mensaje.</div>`}<div class="detail-actions">${contact && !x.fulfilled && !x.archived ? `<a class="button primary" href="${e(contact)}" target="_blank" rel="noopener noreferrer">${icon("whatsapp-logo")} Contactar por WhatsApp</a>` : x.fulfilled || x.archived ? '<span class="button outline">Este anuncio ya no está activo</span>' : `<button class="button primary" data-interest="${e(id)}">${icon(interested ? "check" : "hand-heart")}${interested ? "Interés guardado" : e(types[x.type].action)}</button>`}<button class="button outline" data-save="${e(id)}">${icon("heart")}<span>${state.saved.includes(id) ? "Guardado" : "Guardar"}</span></button></div><div class="detail-secondary">${x.demo ? `<button class="text-button" data-share="${e(id)}">${icon("link")}Copiar enlace del anuncio</button>` : '<span class="field-help">Tu anuncio es local y aún no tiene un enlace público.</span>'}<span>${icon("gift")}Todo se comparte gratis</span></div>${state.posts.some((p) => p.id === id) ? `<p class="local-note"><button class="text-button" data-edit="${e(id)}">Editar mi publicación ${icon("pencil-simple")}</button></p>` : ""}`,
   );
 }
 const categories = [
@@ -242,183 +248,10 @@ function field(name, label, html, help = "") {
   return `<div class="field" data-field="${name}"><label for="pub-${name}">${label}</label>${html}${help ? `<small>${help}</small>` : ""}<span class="error" id="error-${name}"></span></div>`;
 }
 function publish(id) {
-  photoRemoved = false;
-  let draft = null;
-  if (!id) {
-    try {
-      draft = JSON.parse(localStorage.getItem("doname-draft") || "null");
-    } catch {}
-  }
-  const item = id ? find(id) : draft;
-  editingId = id && !item?.demo ? item?.id || null : null;
-  uploadData = item?.image?.startsWith("data:") ? item.image : "";
-  const val = (n) => e(item?.[n] || "");
-  const currentType =
-    item?.type || (filters.type === "all" ? "object" : filters.type);
-  show(
-    editingId ? "Edita tu publicación" : "Algo bueno empieza contigo",
-    `${draft ? '<div class="draft-notice">' + icon("note-pencil") + ' Retomamos tu borrador. <button data-action="discard-draft">Descartar</button></div>' : ""}<p class="modal-intro">Comparte lo que tienes, lo que sabes o lo que necesitas. Aquí todo es gratuito.</p><form id="publish-form" novalidate><div class="modal-tabs" role="group" aria-label="¿Qué quieres publicar?">${Object.entries(
-      types,
-    )
-      .map(
-        ([key, t]) =>
-          `<label><input type="radio" name="type" value="${key}" ${key === currentType ? "checked" : ""}>${icon(t.icon)}<span>${e(t.offer)}</span></label>`,
-      )
-      .join(
-        "",
-      )}</div>${field("title", "Título del anuncio *", `<input id="pub-title" name="title" maxlength="90" required placeholder="Por ejemplo: dono una silla de ruedas" value="${val("title")}" aria-describedby="error-title">`)}${field("description", "Cuéntanos un poco más *", `<textarea id="pub-description" name="description" maxlength="1500" required placeholder="¿Qué ofreces o necesitas? Incluye el estado, los horarios o cómo se puede coordinar." aria-describedby="error-description">${val("description")}</textarea>`)}<div class="field"><label for="pub-photo">Foto (opcional)</label><label class="photo-upload" for="pub-photo">${uploadData ? `<img src="${e(uploadData)}" alt="Vista previa de tu foto">` : icon("camera")}<span>Una foto ayuda a conectar<small>JPG, PNG o WebP. Máximo 5 MB.</small></span></label><input class="photo-input" id="pub-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"><span id="photo-error" class="error" role="alert"></span><button id="remove-photo" type="button" class="text-button" data-action="remove-photo" ${uploadData ? "" : "hidden"}>Quitar foto</button></div><div class="form-row">${field("city", "Ciudad *", `<select id="pub-city" name="city" required aria-describedby="error-city">${options(cities, item?.city, "Selecciona tu ciudad")}</select>`)}${field("mode", "Modalidad", `<select id="pub-mode" name="mode">${options(["Presencial", "En línea"], item?.mode || "Presencial")}</select>`)}</div><div class="form-row">${field("category", "Categoría", `<select id="pub-category" name="category">${options(categories, item?.category || "Comunidad")}</select>`)}${field("condition", "Estado o disponibilidad", `<input id="pub-condition" name="condition" maxlength="60" placeholder="Buen estado, 3 clases..." value="${val("condition")}">`)}</div>${field("person", "Tu nombre o el de tu iniciativa *", `<input id="pub-person" name="person" maxlength="60" required autocomplete="given-name" value="${val("person")}" placeholder="¿Cómo te llamas?" aria-describedby="error-person">`)}${field("phone", "WhatsApp (opcional)", `<input id="pub-phone" name="phone" type="tel" inputmode="tel" placeholder="09XXXXXXXX" autocomplete="tel" value="${val("phone")}" aria-describedby="phone-help error-phone">`, '<span id="phone-help">Solo guardaremos y mostraremos tu número si activas la autorización de abajo.</span>')}<label class="check-field"><input type="checkbox" name="consent" ${item?.consent ? "checked" : ""}><span>Autorizo que mi número aparezca en el detalle de este anuncio para que puedan contactarme por WhatsApp.</span></label><div id="publish-error" class="form-message" role="alert"></div><button class="button primary full" type="submit">${editingId ? "Guardar cambios" : "Publicar en la maqueta"} ${icon("arrow-up-right")}</button><p class="local-note">Sin cuentas. Este anuncio se guarda solo en este navegador.<br>Evita incluir direcciones exactas o datos privados en la descripción.</p></form>`,
-  );
-  $("#pub-photo").addEventListener("change", readPhoto);
-  $("#publish-form").addEventListener("submit", submitPublish);
-  if (!editingId)
-    $("#publish-form").addEventListener("input", () => {
-      const form = $("#publish-form");
-      const fields = [
-        "type",
-        "title",
-        "description",
-        "city",
-        "mode",
-        "category",
-        "condition",
-        "person",
-      ];
-      const draft = Object.fromEntries(
-        fields.map((key) => [key, form.elements[key]?.value || ""]),
-      );
-      try {
-        localStorage.setItem("doname-draft", JSON.stringify(draft));
-      } catch {}
-    });
-}
-async function readPhoto(ev) {
-  const sequence = ++uploadSequence;
-  const file = ev.target.files?.[0];
-  if (!file) return;
-  $("#photo-error").textContent = "";
-  if (
-    !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
-    file.size > 5 * 1024 * 1024
-  ) {
-    $("#photo-error").textContent =
-      "Elige una imagen JPG, PNG o WebP de hasta 5 MB.";
-    ev.target.value = "";
-    return;
-  }
-  const submit = $("#publish-form button[type=submit]");
-  submit.disabled = true;
-  $("#photo-error").textContent = "Preparando foto…";
-  try {
-    const data = await new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-    const image = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = data;
-    });
-    if (sequence !== uploadSequence || !$("#publish-form")) return;
-    const scale = Math.min(1, 1200 / image.width);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(image.width * scale);
-    canvas.height = Math.round(image.height * scale);
-    canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-    uploadData = canvas.toDataURL("image/jpeg", 0.8);
-    photoRemoved = false;
-    $(".photo-upload").innerHTML =
-      `<img src="${uploadData}" alt="Vista previa de tu foto"><span>Foto lista<small>${e(file.name)}</small></span>`;
-    $("#remove-photo").hidden = false;
-    $("#photo-error").textContent = "";
-  } catch {
-    if (sequence === uploadSequence && $("#photo-error"))
-      $("#photo-error").textContent =
-        "No pudimos leer la foto. Prueba otra imagen.";
-  } finally {
-    if (submit.isConnected) submit.disabled = false;
-  }
-}
-function submitPublish(ev) {
-  ev.preventDefault();
-  const form = ev.currentTarget;
-  const data = Object.fromEntries(new FormData(form));
-  data.consent = form.elements.consent.checked;
-  data.phone = data.phone.trim();
-  const errors = validateListing(data);
-  form.querySelectorAll(".field").forEach((f) => {
-    f.classList.remove("invalid");
-    const control = f.querySelector("input,textarea,select");
-    control?.removeAttribute("aria-invalid");
-    f.querySelector(".error").textContent = "";
-  });
-  if (Object.keys(errors).length) {
-    for (const [name, msg] of Object.entries(errors)) {
-      const f = form.querySelector(`[data-field="${name}"]`);
-      if (f) {
-        f.classList.add("invalid");
-        f.querySelector(".error").textContent = msg;
-        f.querySelector("input,textarea,select")?.setAttribute(
-          "aria-invalid",
-          "true",
-        );
-      }
-    }
-    form.querySelector('[aria-invalid="true"]')?.focus();
-    return;
-  }
-  const previous = editingId ? find(editingId) : null;
-  const item = {
-    id: editingId || crypto.randomUUID(),
-    type: data.type,
-    title: data.title.trim(),
-    description: data.description.trim(),
-    city: data.city,
-    mode: data.mode,
-    category: data.category,
-    person: data.person.trim(),
-    initials: data.person
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase(),
-    condition: data.condition.trim() || "Sin costo",
-    consent: data.consent,
-    phone: data.consent ? normalizePhone(data.phone) : "",
-    image:
-      uploadData ||
-      (!photoRemoved && previous?.image) ||
-      "assets/community.webp",
-    imageAlt: uploadData ? "Foto de " + data.title.trim() : data.title.trim(),
-    date: previous?.date || Date.now(),
-    demo: false,
-    fulfilled: previous?.fulfilled || false,
-    archived: previous?.archived || false,
-  };
-  const oldPosts = [...state.posts];
-  if (editingId)
-    state.posts = state.posts.map((x) => (x.id === editingId ? item : x));
-  else state.posts.unshift(item);
-  if (!persist()) {
-    state.posts = oldPosts;
-    $("#publish-error").textContent =
-      "No hay espacio suficiente para guardar la publicación. Prueba una imagen más pequeña.";
-    return;
-  }
-  if (!editingId) {
-    try {
-      localStorage.removeItem("doname-draft");
-    } catch {}
-  }
-  render();
-  show(
-    editingId ? "Cambios guardados" : "Tu gesto ya tiene un lugar",
-    `<div class="success-state"><div class="success-icon">${icon("hand-heart")}</div><h3>${editingId ? "Todo listo." : "Gracias por compartir."}</h3><p>«${e(item.title)}» está ${editingId ? "actualizado" : "publicado"} en esta maqueta. Se conservará en este navegador y podrás gestionarlo en Mi actividad.</p><button class="button primary" data-detail="${e(item.id)}">Ver mi publicación ${icon("arrow-up-right")}</button></div>`,
-  );
+  const params = new URLSearchParams();
+  if (id) params.set("editar", id);
+  else if (filters.type !== "all") params.set("tipo", filters.type);
+  location.href = "publicar.html" + (params.size ? "?" + params : "");
 }
 function toggleSave(id) {
   const original = [...state.saved];
@@ -467,7 +300,7 @@ function activity(tab = "saved") {
       )
       .join(
         "",
-      )}<button data-action="certificate">Mis horas</button></div>${items.length ? items.map((x) => `<div class="activity-item"><img src="${e(safeImage(x))}" alt="${e(x.title)}"><div><button class="item-title" data-detail="${e(x.id)}">${e(x.title)}</button><p>${e(types[x.type].label)} · ${e(x.city)} ${x.demo ? "· Ejemplo" : ""} ${x.archived ? '<span class="pill">Archivado</span>' : x.fulfilled ? '<span class="pill">Completado</span>' : ""}</p><div class="item-tools">${tab === "posts" ? `<button data-edit="${e(x.id)}">Editar</button><button data-fulfill="${e(x.id)}">${x.fulfilled ? "Reactivar" : "Marcar completado"}</button><button data-archive="${e(x.id)}">${x.archived ? "Restaurar" : "Archivar"}</button>` : tab === "saved" ? `<button data-save="${e(x.id)}">Quitar de guardados</button>` : `<button data-uninterest="${e(x.id)}">Quitar interés</button>`}</div></div></div>`).join("") : `<div class="empty-state">${icon(tab === "saved" ? "heart" : tab === "posts" ? "package" : "hand-heart")}<h3>${tab === "posts" ? "Tu primer gesto puede empezar hoy." : "Aquí hay espacio para algo bueno."}</h3><p>${tab === "saved" ? "Toca el corazón de un anuncio para encontrarlo aquí." : tab === "posts" ? "Publica un objeto, un servicio, una necesidad o un voluntariado." : "Guarda tu interés en un anuncio de ejemplo para probar el recorrido."}</p><button class="button outline" data-action="${tab === "posts" ? "publish" : "close"}">${tab === "posts" ? "Quiero ayudar" : "Seguir explorando"}</button></div>`}`,
+      )}<button data-action="certificate">Mis horas</button></div>${items.length ? items.map((x) => `<div class="activity-item">${activityPhoto(x)}<div><button class="item-title" data-detail="${e(x.id)}">${e(x.title)}</button><p>${e(types[x.type].label)} · ${e(x.city)} ${x.demo ? "· Ejemplo" : ""} ${x.archived ? '<span class="pill">Archivado</span>' : x.fulfilled ? '<span class="pill">Completado</span>' : ""}</p><div class="item-tools">${tab === "posts" ? `<button data-edit="${e(x.id)}">Editar</button><button data-fulfill="${e(x.id)}">${x.fulfilled ? "Reactivar" : "Marcar completado"}</button><button data-archive="${e(x.id)}">${x.archived ? "Restaurar" : "Archivar"}</button>` : tab === "saved" ? `<button data-save="${e(x.id)}">Quitar de guardados</button>` : `<button data-uninterest="${e(x.id)}">Quitar interés</button>`}</div></div></div>`).join("") : `<div class="empty-state">${icon(tab === "saved" ? "heart" : tab === "posts" ? "package" : "hand-heart")}<h3>${tab === "posts" ? "Tu primer gesto puede empezar hoy." : "Aquí hay espacio para algo bueno."}</h3><p>${tab === "saved" ? "Toca el corazón de un anuncio para encontrarlo aquí." : tab === "posts" ? "Publica un objeto, un servicio, una necesidad o un voluntariado." : "Guarda tu interés en un anuncio de ejemplo para probar el recorrido."}</p><button class="button outline" data-action="${tab === "posts" ? "publish" : "close"}">${tab === "posts" ? "Quiero ayudar" : "Seguir explorando"}</button></div>`}`,
   );
   $("#modal-content").dataset.view = "activity";
 }
@@ -620,15 +453,6 @@ const actions = {
     visible = 8;
     render();
     if ($("#modal").open) close();
-  },
-  "remove-photo": () => {
-    uploadData = "";
-    photoRemoved = true;
-    $("#pub-photo").value = "";
-    $(".photo-upload").innerHTML =
-      icon("camera") +
-      "<span>Una foto ayuda a conectar<small>JPG, PNG o WebP. Máximo 5 MB.</small></span>";
-    $("#remove-photo").hidden = true;
   },
   community: () =>
     show(
@@ -833,4 +657,9 @@ if (!reducedMotion.matches && "IntersectionObserver" in window) {
     ".hero, .section-heading, .guide-hero",
   );
   if (sentinel) topObserver.observe(sentinel);
+}
+
+if (document.querySelector("#publication-form")) {
+  const { initPublication } = await import("./publish.js");
+  initPublication({ state, persist, find, toast });
 }

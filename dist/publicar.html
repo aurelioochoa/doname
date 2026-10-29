@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="es-EC">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#236248" />
+    <meta
+      name="description"
+      content="Lo que das, nos une. Explora dóname, una comunidad para donar objetos, compartir conocimientos, pedir ayuda y encontrar voluntariados en Ecuador."
+    />
+    <title>Publicar un gesto · dóname</title>
+    <meta property="og:title" content="dóname · Lo que das, nos une" />
+    <meta
+      property="og:description"
+      content="Objetos, conocimientos y tiempo para una comunidad más cercana en Ecuador."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23236248'/%3E%3Ctext x='16' y='47' fill='white' font-family='Arial' font-weight='bold' font-size='49'%3Ed%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="assets/jakarta-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/icons/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="experience.css?v=3" />
+    <link rel="stylesheet" href="publish.css" />
+    <script type="module" src="app.js?v=3"></script>
+  </head>
+  <body data-page="publish">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="header">
+      <div class="shell nav">
+        <a class="brand" href="index.html" aria-label="dóname, inicio"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <nav id="primary-nav" aria-label="Navegación principal">
+          <a class="nav-link" href="index.html">Inicio</a
+          ><a class="nav-link" href="explorar.html">Explorar</a
+          ><a class="nav-link" href="explorar.html?tipo=volunteer"
+            >Voluntariados</a
+          ><a class="nav-link" href="guia.html">Cómo funciona</a
+          ><button class="nav-link mobile-activity" data-action="activity">
+            Mi actividad
+          </button>
+        </nav>
+        <div class="nav-actions">
+          <label class="theme-control"
+            ><i class="ph ph-circle-half" aria-hidden="true"></i
+            ><span class="sr-only">Apariencia</span
+            ><select id="theme-preference" aria-label="Apariencia">
+              <option value="system">Sistema</option>
+              <option value="light">Claro</option>
+              <option value="dark">Oscuro</option>
+            </select></label
+          ><button
+            class="activity-button"
+            data-action="activity"
+            aria-label="Mi actividad"
+          >
+            <i class="ph ph-heart" aria-hidden="true"></i
+            ><span>Mi actividad</span
+            ><span id="saved-count" class="count" hidden>0</span></button
+          ><button
+            class="button primary publish-nav"
+            data-action="publish"
+            aria-label="Publicar"
+          >
+            <i class="ph ph-plus" aria-hidden="true"></i>Publicar</button
+          ><button
+            class="menu-button"
+            data-action="menu"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+            aria-controls="primary-nav"
+          >
+            <i class="ph ph-list" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="contenido" class="publication-main shell">
+      <a class="breadcrumb" href="explorar.html"
+        ><i class="ph ph-arrow-left" aria-hidden="true"></i>Volver a explorar</a
+      >
+      <div class="publication-heading">
+        <span class="section-kicker"
+          >UN PEQUEÑO GESTO PUEDE CAMBIAR UN DÍA</span
+        >
+        <h1>Algo bueno empieza contigo.</h1>
+        <p>
+          Comparte lo que tienes, lo que sabes o lo que necesitas. Aquí todo es
+          gratuito.
+        </p>
+      </div>
+      <div id="draft-banner" class="draft-notice" hidden>
+        <i class="ph ph-note-pencil" aria-hidden="true"></i
+        ><span>Retomamos tu borrador.</span
+        ><button id="discard-draft" type="button">Empezar de nuevo</button>
+      </div>
+      <div class="publication-layout" id="publication-layout">
+        <section class="publication-workspace" aria-label="Crear publicación">
+          <ol class="publication-steps" aria-label="Pasos para publicar">
+            <li data-step-indicator="1" aria-current="step">
+              <span>1</span>
+              <div>Tu gesto<small>Qué compartes</small></div>
+            </li>
+            <li data-step-indicator="2">
+              <span>2</span>
+              <div>Los detalles<small>Dale forma</small></div>
+            </li>
+            <li data-step-indicator="3">
+              <span>3</span>
+              <div>La conexión<small>Dónde y contigo</small></div>
+            </li>
+          </ol>
+          <form id="publication-form" novalidate>
+            <fieldset class="publication-step" data-step="1">
+              <legend>¿Cómo quieres conectar?</legend>
+              <p class="step-intro">
+                Cada forma de ayudar tiene su lugar. Elige la tuya.
+              </p>
+              <div class="gesture-choices">
+                <label class="gesture-choice"
+                  ><input
+                    type="radio"
+                    name="type"
+                    value="object"
+                    checked /><span class="gesture-icon"
+                    ><i class="ph ph-package" aria-hidden="true"></i></span
+                  ><strong>Donar un objeto</strong
+                  ><small
+                    >Algo que ya no usas puede ser un nuevo comienzo.</small
+                  ><i
+                    class="ph ph-check-circle choice-check"
+                    aria-hidden="true"
+                  ></i
+                ></label>
+                <label class="gesture-choice"
+                  ><input type="radio" name="type" value="service" /><span
+                    class="gesture-icon"
+                    ><i
+                      class="ph ph-chalkboard-teacher"
+                      aria-hidden="true"
+                    ></i></span
+                  ><strong>Compartir un servicio</strong
+                  ><small>Tu conocimiento, oficio o talento puede ayudar.</small
+                  ><i
+                    class="ph ph-check-circle choice-check"
+                    aria-hidden="true"
+                  ></i
+                ></label>
+                <label class="gesture-choice"
+                  ><input type="radio" name="type" value="need" /><span
+                    class="gesture-icon"
+                    ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+                  ><strong>Pedir ayuda</strong
+                  ><small
+                    >Cuéntanos qué necesitas. No tienes que hacerlo solo.</small
+                  ><i
+                    class="ph ph-check-circle choice-check"
+                    aria-hidden="true"
+                  ></i
+                ></label>
+                <label class="gesture-choice"
+                  ><input type="radio" name="type" value="volunteer" /><span
+                    class="gesture-icon"
+                    ><i class="ph ph-users-three" aria-hidden="true"></i></span
+                  ><strong>Crear un voluntariado</strong
+                  ><small
+                    >Conecta una causa con personas que quieran sumarse.</small
+                  ><i
+                    class="ph ph-check-circle choice-check"
+                    aria-hidden="true"
+                  ></i
+                ></label>
+              </div>
+              <div class="publish-gentle-note">
+                <i class="ph ph-sparkle" aria-hidden="true"></i> No necesitas
+                tener mucho. Solo algo que compartir.
+              </div>
+            </fieldset>
+            <fieldset class="publication-step" data-step="2" hidden>
+              <legend>Dale forma a tu anuncio.</legend>
+              <p class="step-intro" id="details-intro">
+                Una buena descripción ayuda a encontrar a la persona indicada.
+              </p>
+              <div class="field" data-field="title">
+                <label for="pub-title">Ponle un título claro *</label
+                ><input
+                  id="pub-title"
+                  name="title"
+                  maxlength="90"
+                  required
+                  aria-describedby="title-help error-title"
+                  placeholder="Por ejemplo: dono una silla de ruedas"
+                />
+                <div class="field-meta">
+                  <small id="title-help">Cuenta lo esencial en una frase.</small
+                  ><span id="title-count">0/90</span>
+                </div>
+                <span class="error" id="error-title"></span>
+              </div>
+              <div class="field" data-field="description">
+                <label for="pub-description">Cuéntanos un poco más *</label
+                ><textarea
+                  id="pub-description"
+                  name="description"
+                  maxlength="1500"
+                  required
+                  aria-describedby="description-help error-description"
+                  placeholder="Describe lo que ofreces o necesitas y cómo se podría coordinar."
+                ></textarea>
+                <div class="field-meta">
+                  <small id="description-help"
+                    >Incluye estado, disponibilidad o los detalles que puedan
+                    ayudar.</small
+                  ><span id="description-count">0/1500</span>
+                </div>
+                <span class="error" id="error-description"></span>
+              </div>
+              <div class="field">
+                <span class="field-label"
+                  >Una foto ayuda a conectar
+                  <span class="optional-label">(opcional)</span></span
+                >
+                <div class="publication-upload" id="upload-zone">
+                  <span class="upload-camera"
+                    ><i class="ph ph-camera" aria-hidden="true"></i
+                  ></span>
+                  <div>
+                    <strong id="upload-title"
+                      >Dale una cara a tu anuncio</strong
+                    >
+                    <p id="upload-copy">JPG, PNG o WebP de hasta 5 MB.</p>
+                    <label class="upload-button" for="pub-photo"
+                      >Elegir una foto<input
+                        id="pub-photo"
+                        class="sr-only"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp" /></label
+                    ><button
+                      id="remove-publish-photo"
+                      type="button"
+                      class="remove-photo"
+                      hidden
+                    >
+                      Quitar foto
+                    </button>
+                  </div>
+                  <img
+                    id="upload-thumbnail"
+                    alt="Vista previa de la foto seleccionada"
+                    hidden
+                  />
+                </div>
+                <span class="error" id="photo-error" role="alert"></span>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="pub-category">Categoría</label
+                  ><select id="pub-category" name="category"></select>
+                </div>
+                <div class="field">
+                  <label for="pub-condition" id="condition-label"
+                    >Estado o disponibilidad</label
+                  ><input
+                    id="pub-condition"
+                    name="condition"
+                    maxlength="60"
+                    placeholder="Buen estado, 3 clases, sábados..."
+                  />
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="publication-step" data-step="3" hidden>
+              <legend>Un poquito más cerca.</legend>
+              <p class="step-intro">
+                Elige dónde y cómo pueden coordinar contigo. Tu teléfono es
+                opcional.
+              </p>
+              <div class="form-row">
+                <div class="field" data-field="city">
+                  <label for="pub-city">Ciudad *</label
+                  ><select
+                    id="pub-city"
+                    name="city"
+                    required
+                    aria-describedby="error-city"
+                  >
+                    <option value="">Selecciona tu ciudad</option></select
+                  ><span class="error" id="error-city"></span>
+                </div>
+                <div class="field">
+                  <label for="pub-mode">Modalidad</label
+                  ><select id="pub-mode" name="mode">
+                    <option>Presencial</option>
+                    <option>En línea</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field" data-field="person">
+                <label for="pub-person">Tu nombre o el de tu iniciativa *</label
+                ><input
+                  id="pub-person"
+                  name="person"
+                  maxlength="60"
+                  autocomplete="given-name"
+                  placeholder="¿Cómo te llamas?"
+                  required
+                  aria-describedby="error-person"
+                /><span class="error" id="error-person"></span>
+              </div>
+              <div class="contact-section">
+                <div class="contact-heading">
+                  <i class="ph ph-whatsapp-logo" aria-hidden="true"></i>
+                  <div>
+                    <h2>Una conversación puede ser el comienzo.</h2>
+                    <p>Tú decides si quieres habilitar WhatsApp.</p>
+                  </div>
+                </div>
+                <div class="field" data-field="phone">
+                  <label for="pub-phone"
+                    >Tu celular de WhatsApp
+                    <span class="optional-label">(opcional)</span></label
+                  ><input
+                    id="pub-phone"
+                    name="phone"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    placeholder="09XXXXXXXX"
+                    aria-describedby="phone-help error-phone"
+                  /><small id="phone-help"
+                    >Tu número solo se guarda y muestra si marcas la
+                    autorización.</small
+                  ><span class="error" id="error-phone"></span>
+                </div>
+                <label class="check-field"
+                  ><input
+                    id="pub-consent"
+                    name="consent"
+                    type="checkbox"
+                  /><span
+                    >Autorizo que mi número aparezca en el detalle de este
+                    anuncio para que puedan contactarme por WhatsApp.</span
+                  ></label
+                >
+              </div>
+              <div class="publish-review-note">
+                <i class="ph ph-eye" aria-hidden="true"></i>
+                <p>
+                  Revisa la vista previa antes de publicar. Podrás editar o
+                  archivar tu anuncio desde <strong>Mi actividad</strong>.
+                </p>
+              </div>
+            </fieldset>
+            <div id="publish-error" class="form-message" role="alert"></div>
+            <div class="publication-form-actions">
+              <button
+                class="button outline"
+                id="publish-back"
+                type="button"
+                hidden
+              >
+                <i class="ph ph-arrow-left" aria-hidden="true"></i
+                >Anterior</button
+              ><span id="step-status" role="status" aria-live="polite"
+                >Paso 1 de 3</span
+              ><button class="button primary" id="publish-next" type="submit">
+                Continuar <i class="ph ph-arrow-right" aria-hidden="true"></i>
+              </button>
+            </div>
+            <p class="draft-status">
+              <i class="ph ph-note-pencil" aria-hidden="true"></i
+              ><span id="draft-status"
+                >El texto se guarda como borrador en este navegador.</span
+              >
+            </p>
+          </form>
+        </section>
+        <aside class="publication-sidebar">
+          <details class="publication-preview" open>
+            <summary>
+              <i class="ph ph-eye" aria-hidden="true"></i>Vista previa de tu
+              anuncio<i class="ph ph-caret-down" aria-hidden="true"></i>
+            </summary>
+            <article class="publish-preview-card">
+              <div class="preview-photo" id="preview-photo">
+                <div class="item-illustration object">
+                  <i class="ph ph-package" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="preview-card-body">
+                <span class="type-label" id="preview-type">Objeto</span>
+                <h2 id="preview-title">Tu próximo gesto empieza aquí</h2>
+                <p id="preview-description">
+                  Así verán tu anuncio cuando lo publiques.
+                </p>
+                <div class="preview-meta">
+                  <span
+                    ><i class="ph ph-map-pin" aria-hidden="true"></i
+                    ><span id="preview-city">Tu ciudad</span></span
+                  ><span id="preview-mode">Presencial</span>
+                </div>
+                <div class="preview-person">
+                  <span id="preview-initials" class="avatar">TÚ</span
+                  ><span id="preview-person">Tu nombre</span
+                  ><span class="preview-free">Gratis</span>
+                </div>
+              </div>
+            </article>
+          </details>
+          <div class="publication-tips">
+            <i class="ph ph-heart" aria-hidden="true"></i>
+            <div>
+              <h2>Un espacio para ayudarnos.</h2>
+              <p>
+                Comparte con honestidad, respeta a las personas y coordina los
+                detalles con tranquilidad.
+              </p>
+              <a href="guia.html"
+                >Nuestros acuerdos
+                <i class="ph ph-arrow-up-right" aria-hidden="true"></i
+              ></a>
+            </div>
+          </div>
+          <p class="publication-local-note">
+            <i class="ph ph-info" aria-hidden="true"></i> Estás probando una
+            maqueta. Tu anuncio se guarda solo en este navegador. No hay cuentas
+            ni envíos automáticos.
+          </p>
+        </aside>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="shell footer-main">
+        <a class="brand" href="index.html"
+          ><span class="brand-mark"
+            ><i class="ph ph-hand-heart" aria-hidden="true"></i></span
+          >dóname<span class="brand-period">.</span></a
+        >
+        <p>Lo que das, nos une.</p>
+        <a href="guia.html">Cómo funciona</a
+        ><button data-action="community">Cuidemos la comunidad</button
+        ><button data-action="privacy">Tus datos</button
+        ><span class="footer-country"
+          ><span class="ecuador-flag" aria-hidden="true"></span> Hecho para
+          Ecuador</span
+        >
+      </div>
+      <div class="shell footer-bottom">
+        <span>Un espacio para dar, recibir y conectar.</span
+        ><span>Sin compras. Sin ventas. Con propósito.</span>
+      </div>
+    </footer>
+    <dialog id="modal" class="modal" aria-labelledby="modal-title">
+      <div id="modal-content"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <button
+      class="back-top"
+      data-action="back-top"
+      aria-label="Volver arriba"
+      hidden
+    >
+      <i class="ph ph-arrow-up" aria-hidden="true"></i>
+    </button>
+  </body>
+</html>
