@@ -13,5 +13,5 @@ Scope: Primera versión navegable para donar objetos y servicios, pedir ayuda y 
 - [x] G3: La interfaz se puede recorrer con teclado y se adapta a móvil y escritorio
   EVIDENCE: Revisiones visuales de escritorio y teléfono; anchos 320 y 768 sin desbordamiento (scrollWidth igual a clientWidth: 305 y 753 con scrollbar); Tab enfoca opciones del formulario, Escape cierra el diálogo y devuelve el foco a Publicar.
 
-- [ ] G4: La versión publicada responde con una URL confirmada por Sites
-  EVIDENCE: pending
+- [x] G4: La versión publicada responde con una URL confirmada por Sites
+  EVIDENCE: Sites confirmó succeeded para appgdep_6ae3af1880e481918c96d979823a6e14; URL https://doname-ecuador.fusilero.chatgpt.site; commit desplegado adcbdfed1395a57cd1859363e8995023e65fffd8. Alojamiento privado de propietario; la aplicación local no incluye autenticación.
