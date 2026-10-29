@@ -48,3 +48,5 @@ Evidencia en `GATES.md`. El sitio publicado conserva las limitaciones del almace
 - Se revisaron los pasos de la publicación en móvil y tablet: ocho mediciones en viewports 320, 390, 768 y 1280, todas sin desbordamiento horizontal.
 - La revisión del nuevo recorrido no mostró errores de JavaScript.
 - La carga inicial mantiene desactivados los campos y el envío hasta completar la preparación del formulario. Se comprobó que después se habilita Continuar y avanza a «Paso 2 de 3», sin errores de consola.
+
+- Publicación final ampliada: Actions 40957905697 completó con success para e9d84cc. En el sitio público el catálogo mostró 40 oportunidades y la página de publicación preparó el formulario y habilitó Continuar, sin errores. La ruta publicar.html devolvió HTTP 200 y el recurso de entrada actualizado app.js?v=4.

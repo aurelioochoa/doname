@@ -16,11 +16,11 @@ Scope: Ampliar el MVP sin cuentas, separado en landing, catálogo, guía y publi
 - [x] G4: Animaciones, teclado, menú móvil y nuevos recorridos funcionan sin desbordar la pantalla
   EVIDENCE: Brave: se conserva la revisión de las tres páginas iniciales y se comprobaron ocho anchos de la publicación en sus tres pasos (320/390/768/1280), sin desbordamiento. Validación enfoca errores; navegación Anterior/Continuar, vista previa y tema oscuro comprobados. Consola sin errores.
 
-- [ ] G5: El repositorio público de aurelioochoa contiene el código y el flujo de publicación
-  EVIDENCE: pending
+- [x] G5: El repositorio público de aurelioochoa contiene el código y el flujo de publicación
+  EVIDENCE: Repositorio PUBLIC https://github.com/aurelioochoa/doname; commit e9d84ccade6d2431f683a50d531e7cd850b58808 subido, con 40 ejemplos, publicar.html, publish.js/publish.css, comprobaciones y workflow de Pages.
 
-- [ ] G6: GitHub Pages publica la versión final y responde correctamente bajo la ruta del repositorio
-  EVIDENCE: pending
+- [x] G6: GitHub Pages publica la versión final y responde correctamente bajo la ruta del repositorio
+  EVIDENCE: Actions 40957905697 completó con success para e9d84cc. En GitHub Pages, el catálogo mostró 40 oportunidades sin errores; publicar.html cargó el formulario de tres pasos y Continuar habilitado tras preparar los módulos. HTTPS /doname/publicar.html respondió 200 y publicó app.js?v=4.
 
 - [x] G7: El catálogo incluye al menos 36 ejemplos variados y 8 por cada tipo, con datos válidos
   CHECK: node scripts/check-opportunities.mjs
