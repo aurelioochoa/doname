@@ -410,6 +410,9 @@ export function initPublication({ state, persist, find, toast }) {
         : "smooth",
     });
   });
+  form.querySelectorAll('.publication-step').forEach(fieldset=>fieldset.disabled=false);
+  form.setAttribute('aria-busy','false');
+  $('#publish-next').disabled=false;
   updatePreview();
   setStep(1, false);
 }

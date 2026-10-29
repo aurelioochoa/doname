@@ -660,6 +660,11 @@ if (!reducedMotion.matches && "IntersectionObserver" in window) {
 }
 
 if (document.querySelector("#publication-form")) {
-  const { initPublication } = await import("./publish.js");
-  initPublication({ state, persist, find, toast });
+  try {
+    const { initPublication } = await import('./publish.js?v=4');
+    initPublication({state,persist,find,toast});
+  } catch {
+    $('#publish-error').textContent='No pudimos preparar el formulario. Recarga la página para volver a intentarlo.';
+    $('#draft-status').textContent='Tu borrador sigue guardado en este navegador.';
+  }
 }

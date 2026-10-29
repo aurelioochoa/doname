@@ -31,7 +31,7 @@
     <script src="theme.js"></script>
     <link rel="stylesheet" href="experience.css?v=3" />
     <link rel="stylesheet" href="publish.css" />
-    <script type="module" src="app.js?v=3"></script>
+    <script type="module" src="app.js?v=4"></script>
   </head>
   <body data-page="publish">
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -122,8 +122,8 @@
               <div>La conexión<small>Dónde y contigo</small></div>
             </li>
           </ol>
-          <form id="publication-form" novalidate>
-            <fieldset class="publication-step" data-step="1">
+          <form id="publication-form" novalidate aria-busy="true">
+            <fieldset class="publication-step" disabled data-step="1">
               <legend>¿Cómo quieres conectar?</legend>
               <p class="step-intro">
                 Cada forma de ayudar tiene su lugar. Elige la tuya.
@@ -188,7 +188,7 @@
                 tener mucho. Solo algo que compartir.
               </div>
             </fieldset>
-            <fieldset class="publication-step" data-step="2" hidden>
+            <fieldset class="publication-step" disabled data-step="2" hidden>
               <legend>Dale forma a tu anuncio.</legend>
               <p class="step-intro" id="details-intro">
                 Una buena descripción ayuda a encontrar a la persona indicada.
@@ -281,7 +281,7 @@
                 </div>
               </div>
             </fieldset>
-            <fieldset class="publication-step" data-step="3" hidden>
+            <fieldset class="publication-step" disabled data-step="3" hidden>
               <legend>Un poquito más cerca.</legend>
               <p class="step-intro">
                 Elige dónde y cómo pueden coordinar contigo. Tu teléfono es
@@ -375,7 +375,7 @@
                 >Anterior</button
               ><span id="step-status" role="status" aria-live="polite"
                 >Paso 1 de 3</span
-              ><button class="button primary" id="publish-next" type="submit">
+              ><button class="button primary" id="publish-next" type="submit" disabled>
                 Continuar <i class="ph ph-arrow-right" aria-hidden="true"></i>
               </button>
             </div>
